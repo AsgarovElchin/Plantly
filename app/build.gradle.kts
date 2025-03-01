@@ -103,4 +103,10 @@ dependencies {
 
     // Splash Screen
     implementation (libs.androidx.core.splashscreen)
+
+    // Jetpack DataStore (Preferences)
+    implementation(libs.androidx.datastore.preferences)
+
+    // Coroutine support for DataStore
+    implementation(libs.kotlinx.coroutines.android)
 }

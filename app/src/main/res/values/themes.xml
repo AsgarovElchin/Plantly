@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.Plantly" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.SplashScreen.Common." parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_icon</item>
+        <item name="windowSplashScreenIconBackgroundColor">#FFFFFF</item>
+        <item name="postSplashScreenTheme">@style/Theme.Plantly</item>
+    </style>
 </resources>

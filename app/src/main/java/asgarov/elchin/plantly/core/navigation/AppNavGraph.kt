@@ -34,14 +34,14 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         startDestination = if (showOnboarding) "onboarding_graph" else "main_graph"
     ) {
 
-        // ✅ Onboarding Graph
+
         navigation(startDestination = NavigationRoute.OnboardingRoute.route, route = "onboarding_graph") {
             composable(NavigationRoute.OnboardingRoute.route) {
                 OnboardingScreen(navController)
             }
         }
 
-        // ✅ Main Navigation Graph
+
         navigation(startDestination = NavigationRoute.ReminderRoute.route, route = "main_graph") {
             composable(NavigationRoute.ReminderRoute.route) {
                 ReminderScreen()

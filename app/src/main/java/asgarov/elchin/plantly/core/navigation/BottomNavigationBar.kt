@@ -17,11 +17,11 @@ import asgarov.elchin.plantly.R
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val topLevelRoutes = listOf(
-        TopLevelRoute("Reminder", NavigationRoute.ReminderRoute, IconType.DrawableRes(R.drawable.alarm_icon)),
-        TopLevelRoute("Explore", NavigationRoute.ExploreRoute, IconType.DrawableRes(R.drawable.search_icon)),
-        TopLevelRoute("Scan", NavigationRoute.ScanRoute, IconType.DrawableRes(R.drawable.scan_icon)),
-        TopLevelRoute("My Garden", NavigationRoute.MyGarden, IconType.DrawableRes(R.drawable.garden_icon)),
-        TopLevelRoute("Profile", NavigationRoute.ProfileRoute, IconType.DrawableRes(R.drawable.person_icon))
+        TopLevelRoute("Reminder", NavigationRoute.ReminderRoute,R.drawable.alarm_icon),
+        TopLevelRoute("Explore", NavigationRoute.ExploreRoute, R.drawable.search_icon),
+        TopLevelRoute("Scan", NavigationRoute.ScanRoute, R.drawable.scan_icon),
+        TopLevelRoute("My Garden", NavigationRoute.MyGarden, R.drawable.garden_icon),
+        TopLevelRoute("Profile", NavigationRoute.ProfileRoute, R.drawable.person_icon)
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -32,13 +32,10 @@ fun BottomNavBar(navController: NavHostController) {
         topLevelRoutes.forEachIndexed { index, route ->
             NavigationBarItem(
                 icon = {
-                    when (route.icon) {
-                        is IconType.Vector -> Icon(route.icon.imageVector, contentDescription = route.name)
-                        is IconType.DrawableRes -> Icon(
-                            painterResource(route.icon.resId),
+                         Icon(
+                            painterResource(route.iconResId),
                             contentDescription = route.name
                         )
-                    }
                 },
                 label = { Text(route.name) },
                 selected = index == selectedIndex,

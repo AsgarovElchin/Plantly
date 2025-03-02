@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import asgarov.elchin.plantly.core.navigation.NavigationRoute
 import asgarov.elchin.plantly.onboarding.domain.model.OnboardingModel
 import asgarov.elchin.plantly.onboarding.presentation.component.ButtonComponent
 import asgarov.elchin.plantly.onboarding.presentation.component.IndicatorComponent
@@ -47,7 +48,7 @@ fun OnboardingScreen(navController: NavController) {
         when (pagerState.currentPage) {
             0 -> listOf("", "Next")
             1 -> listOf("Back", "Next")
-            2 -> listOf("Back", "Next")
+            2 -> listOf("Back", "Start")
             else -> listOf("", "")
         }
     )
@@ -90,7 +91,9 @@ fun OnboardingScreen(navController: NavController) {
                             else{
                                 viewModel.markOnboardingCompleted()
                                 delay(300)
-                              navController.navigate("main")
+                              navController.navigate("main_graph"){
+                                  popUpTo(0){inclusive = true}
+                              }
 
                             }
                         }

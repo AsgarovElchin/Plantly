@@ -29,8 +29,18 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val backStackEntry = navController.currentBackStackEntryAsState()
 
+                val authenticationRoutes = listOf(
+                    NavigationRoute.WelcomeRoute.route,
+                    NavigationRoute.LoginRoute.route,
+                    NavigationRoute.RegisterRoute.route,
+                    NavigationRoute.ForgotPasswordRoute.route,
+                    NavigationRoute.OTPVerificationRoute.route,
+                    NavigationRoute.CreateNewPassword.route,
+                    NavigationRoute.PasswordChanged.route
+                )
+
                 val showBottomBar = backStackEntry.value?.destination?.route?.let { route ->
-                    route != NavigationRoute.OnboardingRoute.route && route != "onboarding_graph"
+                    route !in authenticationRoutes && route !in listOf("onboarding_graph")
                 } ?: false
 
                 Scaffold(modifier = Modifier.fillMaxSize(),

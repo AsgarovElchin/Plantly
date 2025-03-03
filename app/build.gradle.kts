@@ -109,4 +109,7 @@ dependencies {
 
     // Coroutine support for DataStore
     implementation(libs.kotlinx.coroutines.android)
+
+   implementation (libs.androidx.material.icons.extended)
+
 }

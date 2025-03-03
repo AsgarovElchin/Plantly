@@ -22,6 +22,27 @@ sealed class NavigationRoute(val route:String) {
     @Serializable
     data object ProfileRoute: NavigationRoute("profile")
 
+    @Serializable
+    data object WelcomeRoute: NavigationRoute("welcome")
+
+    @Serializable
+    data object LoginRoute: NavigationRoute("login")
+
+    @Serializable
+    data object RegisterRoute: NavigationRoute("register")
+
+    @Serializable
+    data object ForgotPasswordRoute: NavigationRoute("forgot_password")
+
+    @Serializable
+    data object OTPVerificationRoute: NavigationRoute("otp_verification")
+
+    @Serializable
+    data object CreateNewPassword: NavigationRoute("create_new_password")
+
+    @Serializable
+    data object PasswordChanged: NavigationRoute("password_changed")
+
 
 
 }

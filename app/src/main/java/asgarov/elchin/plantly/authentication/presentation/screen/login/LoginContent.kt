@@ -63,7 +63,7 @@ fun LoginContent(navController: NavController){
         AuthButton(text = "Login",
             textColor = Color.White,
             buttonColor = Color.Black,
-            onClick = {})
+            onClick = {navController.navigate(NavigationRoute.ReminderRoute.route)})
 
         Spacer(modifier = Modifier.height(50.dp))
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.Center,

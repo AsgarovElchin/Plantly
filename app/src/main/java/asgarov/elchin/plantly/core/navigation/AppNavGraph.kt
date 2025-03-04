@@ -68,7 +68,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 CreateNewPasswordScreen(navController)
             }
             composable(NavigationRoute.PasswordChanged.route) {
-                PasswordChangedScreen()
+                PasswordChangedScreen(navController)
             }
         }
 

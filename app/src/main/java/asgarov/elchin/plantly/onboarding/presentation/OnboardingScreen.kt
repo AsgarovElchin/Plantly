@@ -90,7 +90,7 @@ fun OnboardingScreen(navController: NavController) {
                             else{
                                 viewModel.markOnboardingCompleted()
                                 delay(300)
-                              navController.navigate("main_graph"){
+                              navController.navigate("authentication_graph"){
                                   popUpTo(0){inclusive = true}
                               }
 

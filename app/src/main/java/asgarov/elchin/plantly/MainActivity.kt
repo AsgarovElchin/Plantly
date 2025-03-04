@@ -40,8 +40,9 @@ class MainActivity : ComponentActivity() {
                 )
 
                 val showBottomBar = backStackEntry.value?.destination?.route?.let { route ->
-                    route !in authenticationRoutes && route !in listOf("onboarding_graph")
+                    route !in authenticationRoutes && !route.startsWith("onboarding")
                 } ?: false
+
 
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar = {if(showBottomBar) BottomNavBar(navController)}

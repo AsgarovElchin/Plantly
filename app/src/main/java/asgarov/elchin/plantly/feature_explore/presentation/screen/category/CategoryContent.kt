@@ -1,4 +1,4 @@
-package asgarov.elchin.plantly.feature_explore.presentation
+package asgarov.elchin.plantly.feature_explore.presentation.screen.category
 
 
 import androidx.compose.foundation.layout.padding
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import asgarov.elchin.plantly.feature_explore.domain.model.Category
+import asgarov.elchin.plantly.feature_explore.presentation.screen.category.component.CategoryItem
 
 @Composable
 fun CategoryContent(

@@ -2,7 +2,9 @@ package asgarov.elchin.plantly.feature_explore.di
 
 import asgarov.elchin.plantly.feature_explore.data.remote.PlantsDataApi
 import asgarov.elchin.plantly.feature_explore.data.repository.CategoryRepositoryImpl
+import asgarov.elchin.plantly.feature_explore.data.repository.PlantRepositoryImpl
 import asgarov.elchin.plantly.feature_explore.domain.repository.CategoryRepository
+import asgarov.elchin.plantly.feature_explore.domain.repository.PlantRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,12 @@ object ExploreModule {
     @Provides
     fun provideCategoryRepository(api: PlantsDataApi): CategoryRepository {
         return CategoryRepositoryImpl(api)
+    }
+
+    @Singleton
+    @Provides
+    fun providePlantRepository(api: PlantsDataApi): PlantRepository {
+        return PlantRepositoryImpl(api)
     }
 
 }

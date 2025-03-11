@@ -1,4 +1,4 @@
-package asgarov.elchin.plantly.feature_explore.presentation
+package asgarov.elchin.plantly.feature_explore.presentation.screen.category
 
 import asgarov.elchin.plantly.feature_explore.domain.model.Category
 

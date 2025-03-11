@@ -1,4 +1,4 @@
-package asgarov.elchin.plantly.feature_explore.presentation
+package asgarov.elchin.plantly.feature_explore.presentation.screen.category
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

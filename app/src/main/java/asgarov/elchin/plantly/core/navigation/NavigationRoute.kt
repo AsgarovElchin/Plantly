@@ -43,6 +43,11 @@ sealed class NavigationRoute(val route:String) {
     @Serializable
     data object PasswordChanged: NavigationRoute("password_changed")
 
+    @Serializable
+    data object PlantScreenRoute : NavigationRoute("plant_screen/{categoryName}") {
+        fun createRoute(categoryName: String) = "plant_screen/$categoryName"
+    }
+
 
 
 }

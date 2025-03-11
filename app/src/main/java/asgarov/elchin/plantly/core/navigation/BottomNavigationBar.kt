@@ -1,6 +1,6 @@
 package asgarov.elchin.plantly.core.navigation
 
-import androidx.compose.foundation.background
+
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem

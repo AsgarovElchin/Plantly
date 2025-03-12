@@ -1,39 +1,31 @@
 package asgarov.elchin.plantly.feature_explore.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import asgarov.elchin.plantly.BuildConfig
-import asgarov.elchin.plantly.core.utils.Resource
-import asgarov.elchin.plantly.feature_explore.data.mapper.toCategory
-import asgarov.elchin.plantly.feature_explore.data.mapper.toPlant
+import asgarov.elchin.plantly.feature_explore.data.paging.PlantPagingSource
 import asgarov.elchin.plantly.feature_explore.data.remote.PlantsDataApi
 import asgarov.elchin.plantly.feature_explore.domain.model.Plant
 import asgarov.elchin.plantly.feature_explore.domain.repository.PlantRepository
-import kotlinx.coroutines.Dispatchers
+import asgarov.elchin.plantly.feature_explore.domain.use_case.PlantFilter
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 class PlantRepositoryImpl @Inject constructor(
-    private val plantsDataApi: PlantsDataApi
-):PlantRepository {
-    override fun getAllPlantsByCategory(category: String): Flow<Resource<List<Plant>>> {
-        return  flow {
-            try {
-                emit(Resource.Loading())
-                val plants = plantsDataApi.getAllPlantsByCategory(category,"Bearer ${BuildConfig.API_KEY}").map { it.toPlant() }
-                emit(Resource.Success(plants))
-            } catch (e: HttpException) {
-                emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
-            } catch (e: IOException) {
-                emit(
-                    Resource.Error(
-                        e.localizedMessage
-                            ?: "Couldn't reach server. Check your internet connection"
-                    )
-                )
+    private val api: PlantsDataApi
+) : PlantRepository {
+
+    override fun getAllPlants(filter: PlantFilter): Flow<PagingData<Plant>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                prefetchDistance = 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                PlantPagingSource(api, BuildConfig.API_KEY, filter)
             }
-        }.flowOn(Dispatchers.IO)
+        ).flow
     }
 }

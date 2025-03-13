@@ -1,9 +1,11 @@
 package asgarov.elchin.plantly.feature_explore.data.remote
 
 
+import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantDetailDto
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantListDto
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -22,5 +24,14 @@ interface PlantsDataApi {
         @Query("sunlight") sunlight: String? = null,
         @Query("indoor") indoor: Boolean? = null
     ): PlantListDto
+
+    @GET("v2/species/details/{id}")
+    suspend fun getPlantDetailsById(
+        @Path("id") id: Int,
+        @Query("key") apiKey: String,
+    ): PlantDetailDto
+
+
+
 
 }

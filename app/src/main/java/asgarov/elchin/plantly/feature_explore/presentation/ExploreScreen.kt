@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
 fun ExploreScreen(navController: NavController) {
@@ -74,7 +75,8 @@ fun ExploreScreen(navController: NavController) {
                 }
                 else -> {
                     PlantContent(plants = plants, onItemClick = {plant->
-                      //  navController.navigate(AppRoute.CharacterDetailRoute(character.id))
+                        navController.navigate(NavigationRoute.PlantDetailRoute.createRoute(plant.id))
+
                     })
                 }
             }

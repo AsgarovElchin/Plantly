@@ -17,6 +17,7 @@ import asgarov.elchin.plantly.authentication.presentation.screen.password_change
 import asgarov.elchin.plantly.authentication.presentation.screen.register.RegisterScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.welcome.WelcomeScreen
 import asgarov.elchin.plantly.feature_explore.presentation.ExploreScreen
+import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.PlantDetailScreen
 import asgarov.elchin.plantly.feature_my_garden.presentation.MyGardenScreen
 import asgarov.elchin.plantly.feature_profile.presentation.ProfileScreen
 import asgarov.elchin.plantly.feature_reminder.presentation.ReminderScreen
@@ -88,6 +89,9 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             }
             composable(NavigationRoute.ProfileRoute.route) {
                 ProfileScreen()
+            }
+            composable(NavigationRoute.PlantDetailRoute.route) {
+                PlantDetailScreen()
             }
         }
 

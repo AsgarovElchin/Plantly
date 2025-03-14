@@ -5,7 +5,6 @@ import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantCareGuidesDto
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantDetailDto
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantListDto
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 

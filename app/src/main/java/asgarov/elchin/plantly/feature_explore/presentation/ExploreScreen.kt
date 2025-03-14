@@ -94,12 +94,24 @@ fun ExploreScreen(navController: NavController) {
                 plantViewModel.updateFilter(
                     filter.copy(
                         order = newFilter["Order"],
-                        edible = newFilter["Edible"]?.toBooleanStrictOrNull(),
-                        poisonous = newFilter["Poisonous"]?.toBooleanStrictOrNull(),
+                        edible = when (newFilter["Edible"]) {
+                            "Yes" -> true
+                            "No" -> false
+                            else -> null
+                        },
+                        poisonous = when (newFilter["Poisonous"]) {
+                            "Yes" -> true
+                            "No" -> false
+                            else -> null
+                        },
                         cycle = newFilter["Cycle"],
                         watering = newFilter["Watering"],
                         sunlight = newFilter["Sunlight"],
-                        indoor = newFilter["Indoor"]?.toBooleanStrictOrNull()
+                        indoor = when (newFilter["Indoor"]) {
+                            "Yes" -> true
+                            "No" -> false
+                            else -> null
+                        }
                     )
                 )
                 showAdvancedFilters = false

@@ -14,23 +14,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Alignment
 
 @Composable
-fun PlantDetailScreen(){
+fun PlantDetailScreen() {
     val plantDetailViewModel: PlantDetailViewModel = hiltViewModel()
     val plantDetailState = plantDetailViewModel.plantDetailState.value
+    val plantCareState = plantDetailViewModel.plantCareState.value
 
+    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
+        val plantCareGuideData = plantCareState.plantCare
 
+        plantDetailState.plantDetail?.let { plant ->
+            PlantDetailContent(plant = plant, plantCareGuideData = plantCareGuideData)
+        }
 
-    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)){
-        plantDetailState.plantDetail?.let { PlantDetailContent(plant = it) }
-
-        if(plantDetailState.error.isNotBlank()){
-            Text(text = plantDetailState.error, color = MaterialTheme.colorScheme.error,
+        if (plantDetailState.error.isNotBlank()) {
+            Text(
+                text = plantDetailState.error,
+                color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.fillMaxWidth()
                     .padding(20.dp)
-                    .align(Alignment.Center))
+                    .align(Alignment.Center)
+            )
         }
 
-        if(plantDetailState.isLoading){
+        if (plantDetailState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-    }}
+    }
+}

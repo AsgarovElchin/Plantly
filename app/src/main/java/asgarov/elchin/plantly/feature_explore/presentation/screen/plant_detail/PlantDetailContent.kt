@@ -21,15 +21,17 @@ import coil3.request.ImageRequest
 import asgarov.elchin.plantly.feature_explore.domain.model.PlantDetail
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
+import asgarov.elchin.plantly.feature_explore.domain.model.PlantCareGuideData
 import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.component.CharacteristicSection
+import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.component.PlantCareSection
 import coil3.request.crossfade
 
 @Composable
-fun PlantDetailContent(plant: PlantDetail) {
+fun PlantDetailContent(plant: PlantDetail,  plantCareGuideData: List<PlantCareGuideData>?,) {
     val scrollState = rememberScrollState()
     Box(modifier = Modifier.fillMaxSize()) {
         PlantImageHeader(imageUrl = plant.defaultImage?.regularUrl, scrollState)
-        PlantInfoContent(plant, scrollState)
+        PlantInfoContent(plantCareGuideData, plant, scrollState)
     }
 }
 
@@ -83,7 +85,11 @@ fun PlantImageHeader(imageUrl: String?, scrollState: ScrollState) {
 }
 
 @Composable
-fun PlantInfoContent(plant: PlantDetail, scrollState: ScrollState) {
+fun PlantInfoContent(
+    plantCareGuideData: List<PlantCareGuideData>?,
+    plant: PlantDetail,
+    scrollState: ScrollState
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -92,9 +98,7 @@ fun PlantInfoContent(plant: PlantDetail, scrollState: ScrollState) {
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = plant.commonName,
                 fontSize = 28.sp,
@@ -109,18 +113,39 @@ fun PlantInfoContent(plant: PlantDetail, scrollState: ScrollState) {
                 fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
             )
             Spacer(modifier = Modifier.height(12.dp))
-
             Text(
                 text = plant.description,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Justify
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             CharacteristicSection(plant)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Plant Care Guide",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            plantCareGuideData?.flatMap { it.careSections }?.let { careSections ->
+                if (careSections.isNotEmpty()) {
+                    PlantCareSection(careSections)
+                } else {
+                    Text(
+                        text = "No care information available",
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+
         }
     }
-}
+}}
 
 
 

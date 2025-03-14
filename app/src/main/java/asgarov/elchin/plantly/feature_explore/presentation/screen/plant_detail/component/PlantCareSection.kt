@@ -1,0 +1,78 @@
+package asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.component
+
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import asgarov.elchin.plantly.feature_explore.domain.model.CareSection
+
+@Composable
+fun PlantCareSection(careSections: List<CareSection>) {
+    Column {
+        careSections.forEach { careSection ->
+            var expanded by remember { mutableStateOf(false) }
+
+            val icon = when (careSection.type.lowercase()) {
+                "watering" -> Icons.Default.Opacity
+                "sunlight" -> Icons.Default.WbSunny
+                "pruning" -> Icons.Default.ContentCut
+                else -> Icons.Default.Info
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .animateContentSize()
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = careSection.type,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = careSection.type.replaceFirstChar { it.uppercase() },
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = if (expanded) careSection.description else careSection.description.take(100) + "...",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = if (expanded) "Show Less" else "Read More",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .clickable { expanded = !expanded }
+                            .padding(4.dp)
+                    )
+                }
+            }
+        }
+    }
+}

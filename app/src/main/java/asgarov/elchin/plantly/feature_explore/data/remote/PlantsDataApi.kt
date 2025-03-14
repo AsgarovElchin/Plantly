@@ -1,6 +1,7 @@
 package asgarov.elchin.plantly.feature_explore.data.remote
 
 
+import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantCareGuidesDto
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantDetailDto
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantListDto
 import retrofit2.http.GET
@@ -28,8 +29,16 @@ interface PlantsDataApi {
     @GET("v2/species/details/{id}")
     suspend fun getPlantDetailsById(
         @Path("id") id: Int,
-        @Query("key") apiKey: String,
+        @Query("key") apiKey: String
     ): PlantDetailDto
+
+    @GET("species-care-guide-list")
+    suspend fun getPlantCareGuidesById(
+        @Query("species_id") speciesId: Int,
+        @Query("key") apiKey: String
+    ): PlantCareGuidesDto
+
+
 
 
 

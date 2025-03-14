@@ -1,8 +1,10 @@
 package asgarov.elchin.plantly.feature_explore.di
 
 import asgarov.elchin.plantly.feature_explore.data.remote.PlantsDataApi
+import asgarov.elchin.plantly.feature_explore.data.repository.PlantCareRepositoryImpl
 import asgarov.elchin.plantly.feature_explore.data.repository.PlantDetailRepositoryImpl
 import asgarov.elchin.plantly.feature_explore.data.repository.PlantRepositoryImpl
+import asgarov.elchin.plantly.feature_explore.domain.repository.PlantCareRepository
 import asgarov.elchin.plantly.feature_explore.domain.repository.PlantDetailRepository
 import asgarov.elchin.plantly.feature_explore.domain.repository.PlantRepository
 import dagger.Module
@@ -33,6 +35,14 @@ object ExploreModule {
     fun providePlantDetailRepository(api: PlantsDataApi): PlantDetailRepository {
         return PlantDetailRepositoryImpl(api)
     }
+
+    @Singleton
+    @Provides
+    fun providePlantCareRepository(api: PlantsDataApi): PlantCareRepository {
+        return PlantCareRepositoryImpl(api)
+    }
+
+
 
 
 

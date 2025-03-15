@@ -27,11 +27,13 @@ import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.c
 import coil3.request.crossfade
 
 @Composable
-fun PlantDetailContent(plant: PlantDetail,  plantCareGuideData: List<PlantCareGuideData>?,) {
+fun PlantDetailContent(plant: PlantDetail,
+                       plantCareGuideData: List<PlantCareGuideData>?,
+                       onAddToGardenClick: () -> Unit) {
     val scrollState = rememberScrollState()
     Box(modifier = Modifier.fillMaxSize()) {
         PlantImageHeader(imageUrl = plant.defaultImage?.regularUrl, scrollState)
-        PlantInfoContent(plantCareGuideData, plant, scrollState)
+        PlantInfoContent(plantCareGuideData, plant, scrollState, onAddToGardenClick)
     }
 }
 
@@ -88,8 +90,10 @@ fun PlantImageHeader(imageUrl: String?, scrollState: ScrollState) {
 fun PlantInfoContent(
     plantCareGuideData: List<PlantCareGuideData>?,
     plant: PlantDetail,
-    scrollState: ScrollState
+    scrollState: ScrollState,
+    onAddToGardenClick: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -114,13 +118,34 @@ fun PlantInfoContent(
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = plant.description,
+                text = if (expanded) plant.description else plant.description.take(300) + "...",
                 fontSize = 14.sp,
                 textAlign = TextAlign.Justify
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            CharacteristicSection(plant)
+            Text(
+                text = if (expanded) "Show Less" else "Read More",
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .clickable { expanded = !expanded }
+                    .padding(4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Button(
+            onClick = onAddToGardenClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        ) {
+            Text(text = "Add to My Garden")
+        }
+
+        CharacteristicSection(plant)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -145,7 +170,7 @@ fun PlantInfoContent(
 
         }
     }
-}}
+}
 
 
 

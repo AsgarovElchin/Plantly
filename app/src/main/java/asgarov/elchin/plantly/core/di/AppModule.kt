@@ -1,6 +1,5 @@
 package asgarov.elchin.plantly.core.di
 
-import androidx.compose.material3.TimeInput
 import asgarov.elchin.plantly.core.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -10,8 +9,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.math.truncate
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,7 +19,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient():OkHttpClient{
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
@@ -31,10 +30,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    @Named("PerenualApi")
+    fun providePerenualRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(Constants.PERENNUAL_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("MainApi")
+    fun provideMainRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .client(OkHttpClient())
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

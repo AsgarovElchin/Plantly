@@ -85,7 +85,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 ScanScreen()
             }
             composable(NavigationRoute.MyGarden.route) {
-                MyGardenScreen()
+                MyGardenScreen(navController)
             }
             composable(NavigationRoute.ProfileRoute.route) {
                 ProfileScreen()

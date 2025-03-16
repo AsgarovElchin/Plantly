@@ -1,6 +1,5 @@
 package asgarov.elchin.plantly.feature_my_garden.data.remote
 
-import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantDto
 import asgarov.elchin.plantly.feature_my_garden.data.remote.dto.GardenPlantDto
 import retrofit2.Response
 import retrofit2.http.Body

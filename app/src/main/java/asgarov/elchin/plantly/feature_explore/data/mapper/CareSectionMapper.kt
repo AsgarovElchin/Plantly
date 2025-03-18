@@ -5,8 +5,8 @@ import asgarov.elchin.plantly.feature_explore.domain.model.CareSection
 
 fun CareSectionDto.careSection(): CareSection {
     return CareSection(
-        id = this.id,
-        type = this.type,
-        description = this.description
+        id = id,
+        type = type,
+        description = description
     )
 }

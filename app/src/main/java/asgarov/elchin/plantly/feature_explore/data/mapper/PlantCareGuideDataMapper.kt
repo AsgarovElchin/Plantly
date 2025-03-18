@@ -5,10 +5,10 @@ import asgarov.elchin.plantly.feature_explore.domain.model.PlantCareGuideData
 
 fun PlantCareGuideDataDto.plantCareGuideData(): PlantCareGuideData {
     return PlantCareGuideData(
-        id = this.id,
-        speciesId = this.speciesId,
-        commonName = this.commonName,
-        scientificName = this.scientificName,
-        careSections = this.sections.map { it.careSection() }
+        id = id,
+        speciesId = speciesId,
+        commonName = commonName,
+        scientificName = scientificName,
+        careSections = sections.map { it.careSection() }
     )
 }

@@ -47,6 +47,9 @@ sealed class NavigationRoute(val route:String) {
     data object PlantDetailRoute : NavigationRoute("plant_detail/{plantId}") {
         fun createRoute(plantId: Int) = "plant_detail/$plantId"
     }
+    data object SetReminderRoute : NavigationRoute("reminder/{plantId}/{plantName}") {
+        fun createRoute(plantId: Long, plantName: String) = "reminder/$plantId/$plantName"
+    }
 
 
 

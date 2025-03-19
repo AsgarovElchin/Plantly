@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
 fun MyGardenScreen(navController: NavController){
@@ -26,7 +27,8 @@ fun MyGardenScreen(navController: NavController){
                     navController.navigate("plant_detail/${plant.id}")
                 },
                 onDeleteClick = {plantId->
-                    gardenPlantViewModel.deleteGardenPlant(plantId)}, onAddReminderClick = {plant->
+                    gardenPlantViewModel.deleteGardenPlant(plantId)}, onAddReminderClick = {gardenPlant->
+                    navController.navigate(NavigationRoute.SetReminderRoute.createRoute(gardenPlant.id, gardenPlant.commonName))
                          })
 
 

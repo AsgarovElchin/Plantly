@@ -47,8 +47,13 @@ sealed class NavigationRoute(val route:String) {
     data object PlantDetailRoute : NavigationRoute("plant_detail/{plantId}") {
         fun createRoute(plantId: Int) = "plant_detail/$plantId"
     }
+    @Serializable
     data object SetReminderRoute : NavigationRoute("reminder/{plantId}/{plantName}") {
         fun createRoute(plantId: Long, plantName: String) = "reminder/$plantId/$plantName"
+    }
+    @Serializable
+    data object EditReminderRoute: NavigationRoute("edit_reminder/{reminderId}/{reminderType}"){
+        fun createRoute(reminderId: Long, reminderType: String) = "edit_reminder/$reminderId/$reminderType"
     }
 
 

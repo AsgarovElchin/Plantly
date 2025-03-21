@@ -1,6 +1,5 @@
 package asgarov.elchin.plantly.feature_reminder.presentation
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -12,14 +11,31 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
+
 @Composable
-fun SetReminderScreen() {
+fun SetReminderScreen(navController: NavController) {
     val viewModel: ReminderViewModel = hiltViewModel()
     val reminderState = viewModel.reminderState.value
+    val successMessage = viewModel.successMessage.value
 
-    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp)
+    ) {
         reminderState.reminder?.let { reminder ->
-            SetReminderContent()
+            SetReminderContent(
+                reminder = reminder,
+                onSave = { updatedReminder ->
+                    viewModel.createReminder(updatedReminder)
+                }
+            )
+
+            if(successMessage.isNotBlank()){
+                navController.popBackStack()
+            }
+
+
 
             if (reminderState.error.isNotBlank()) {
                 Text(
@@ -31,6 +47,7 @@ fun SetReminderScreen() {
                         .align(Alignment.Center)
                 )
             }
+
 
             if (reminderState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

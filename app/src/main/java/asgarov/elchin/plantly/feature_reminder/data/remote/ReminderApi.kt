@@ -20,8 +20,10 @@ interface ReminderApi {
     @GET("reminders")
     suspend fun getAllReminders(): Response<List<ReminderDto>>
 
-    @GET("reminders/{id}")
-    suspend fun getReminderById(@Path("id") id: Long): Response<ReminderDto>
+    @GET("reminders/{id}/{reminderType}")
+    suspend fun getReminderById(
+        @Path("id") id: Long,
+        @Path("reminderType") reminderType: String): Response<ReminderDto>
 
     @DELETE("reminders/{id}")
     suspend fun deleteReminder(@Path("id") id: Long): Response<Unit>

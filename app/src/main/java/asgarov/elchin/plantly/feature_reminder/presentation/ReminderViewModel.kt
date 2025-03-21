@@ -1,5 +1,6 @@
 package asgarov.elchin.plantly.feature_reminder.presentation
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -17,16 +18,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReminderViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val reminderRepository: ReminderRepository
 ) : ViewModel() {
 
     private val _reminderState = mutableStateOf(ReminderState())
     val reminderState: State<ReminderState> = _reminderState
 
+
+    private val _successMessage = mutableStateOf("")
+    val successMessage: State<String> = _successMessage
+
+    private val _reminderListState = mutableStateOf(ReminderListState())
+    val reminderListState: State<ReminderListState> = _reminderListState
+
+
+
+
     init {
         val plantId: Long = savedStateHandle.get<String>("plantId")?.toLongOrNull() ?: 0L
         val plantName: String = savedStateHandle.get<String>("plantName") ?: ""
+
+        Log.d("ReminderViewModel", "plantId = $plantId, plantName = '$plantName'")
+
         _reminderState.value = ReminderState(
             reminder = Reminder(
                 id = 0,
@@ -38,55 +52,45 @@ class ReminderViewModel @Inject constructor(
                 reminderTime = LocalDateTime.now()
             )
         )
+
+        getAllReminders()
     }
 
-    fun updateState(reminder: Reminder) {
-        _reminderState.value = _reminderState.value.copy(reminder = reminder)
-    }
 
-    fun createReminder(reminder: Reminder) {
+   private fun createReminder(reminder: Reminder) {
         reminderRepository.createReminder(reminder).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _reminderState.value = ReminderState(reminder = result.data)
+                    _successMessage.value = "Reminder successfully added"
                 }
                 is Resource.Error -> {
-                    _reminderState.value = ReminderState(error = result.message ?: "Error creating reminder")
+                    _reminderState.value = _reminderState.value.copy(
+                        error = result.message ?: "It is already added",
+                        isLoading = false
+                    )
                 }
                 is Resource.Loading -> {
-                    _reminderState.value = ReminderState(isLoading = true)
+                    _reminderState.value = _reminderState.value.copy(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun getReminderById(id: Long) {
-        reminderRepository.getReminderById(id).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _reminderState.value = ReminderState(reminder = result.data)
-                }
-                is Resource.Error -> {
-                    _reminderState.value = ReminderState(error = result.message ?: "Error fetching reminder")
-                }
-                is Resource.Loading -> {
-                    _reminderState.value = ReminderState(isLoading = true)
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
 
-    fun updateReminder(id: Long, reminder: Reminder) {
-        reminderRepository.updateReminder(id, reminder).onEach { result ->
+
+
+    private fun getAllReminders() {
+        reminderRepository.getAllReminders().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _reminderState.value = ReminderState(reminder = result.data)
+                    _reminderListState.value = ReminderListState(reminders = result.data)
                 }
                 is Resource.Error -> {
-                    _reminderState.value = ReminderState(error = result.message ?: "Error updating reminder")
+                    _reminderListState.value = ReminderListState(error = result.message ?: "Error updating reminder")
                 }
                 is Resource.Loading -> {
-                    _reminderState.value = ReminderState(isLoading = true)
+                    _reminderListState.value = ReminderListState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

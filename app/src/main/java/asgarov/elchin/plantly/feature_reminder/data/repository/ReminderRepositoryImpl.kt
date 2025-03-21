@@ -73,11 +73,11 @@ class ReminderRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getReminderById(id: Long): Flow<Resource<Reminder>> = flow {
+    override fun getReminderById(id: Long, reminderType: String): Flow<Resource<Reminder>> = flow {
         emit(Resource.Loading())
 
         try {
-            val response = reminderApi.getReminderById(id)
+            val response = reminderApi.getReminderById(id,reminderType)
             if (response.isSuccessful) {
                 response.body()?.let { emit(Resource.Success(it.toReminder())) }
                     ?: emit(Resource.Error("Reminder not found"))

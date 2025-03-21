@@ -2,6 +2,7 @@ package asgarov.elchin.plantly.feature_reminder.data.mapper
 
 import asgarov.elchin.plantly.feature_reminder.data.remote.dto.ReminderDto
 import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
+import java.time.LocalDateTime
 
 fun ReminderDto.toReminder(): Reminder {
     return Reminder(
@@ -11,18 +12,18 @@ fun ReminderDto.toReminder(): Reminder {
         reminderType = reminderType.toReminderType(),
         repeatEvery = repeatEvery,
         repeatUnit = repeatUnit,
-        reminderTime = reminderTime
+        reminderTime = LocalDateTime.parse(reminderTime)
     )
 }
 
 fun Reminder.toReminderDto(): ReminderDto {
     return ReminderDto(
-        id = id,
+        id = null,
         plantId = plantId,
         plantName = plantName,
         reminderType = reminderType.toReminderTypeDto(),
         repeatEvery = repeatEvery,
         repeatUnit = repeatUnit,
-        reminderTime = reminderTime
+        reminderTime = reminderTime.toString()
     )
 }

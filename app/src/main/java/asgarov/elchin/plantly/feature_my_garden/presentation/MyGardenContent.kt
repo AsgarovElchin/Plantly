@@ -9,13 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import asgarov.elchin.plantly.feature_my_garden.domain.model.GardenPlant
+import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 
 @Composable
 fun MyGardenContent(
     gardenPlants: List<GardenPlant>,
     onItemClick: (GardenPlant) -> Unit,
     onDeleteClick: (Long) -> Unit,
-    onAddReminderClick: (GardenPlant) -> Unit
+    onAddReminderClick: (GardenPlant) -> Unit,
+    reminders: List<Reminder>,
+    onEditReminderClick: (Long, String) -> Unit
 ){
 
     LazyColumn(
@@ -24,7 +27,7 @@ fun MyGardenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(gardenPlants) { plant ->
-            GardenPlantItem(plant, onItemClick, onDeleteClick, onAddReminderClick)
+            GardenPlantItem(plant, onItemClick, onDeleteClick, onAddReminderClick, reminders, onEditReminderClick)
         }
     }
 

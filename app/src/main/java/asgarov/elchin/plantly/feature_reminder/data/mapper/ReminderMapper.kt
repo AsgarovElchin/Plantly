@@ -12,7 +12,8 @@ fun ReminderDto.toReminder(): Reminder {
         reminderType = reminderType.toReminderType(),
         repeatEvery = repeatEvery,
         repeatUnit = repeatUnit,
-        reminderTime = LocalDateTime.parse(reminderTime)
+        reminderTime = LocalDateTime.parse(reminderTime),
+        previousData = previousData.toPreviousData()
     )
 }
 
@@ -24,6 +25,7 @@ fun Reminder.toReminderDto(): ReminderDto {
         reminderType = reminderType.toReminderTypeDto(),
         repeatEvery = repeatEvery,
         repeatUnit = repeatUnit,
-        reminderTime = reminderTime.toString()
+        reminderTime = reminderTime.toString(),
+        previousData = previousData.toPreviousDataDto()
     )
 }

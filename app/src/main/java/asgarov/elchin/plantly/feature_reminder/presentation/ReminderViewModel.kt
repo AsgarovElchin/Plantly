@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import asgarov.elchin.plantly.core.utils.Resource
+import asgarov.elchin.plantly.feature_reminder.domain.model.PreviousData
 import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 import asgarov.elchin.plantly.feature_reminder.domain.model.ReminderType
 import asgarov.elchin.plantly.feature_reminder.domain.repository.ReminderRepository
@@ -49,7 +50,8 @@ class ReminderViewModel @Inject constructor(
                 reminderType = ReminderType.MISTING,
                 repeatEvery = 1,
                 repeatUnit = "Days",
-                reminderTime = LocalDateTime.now()
+                reminderTime = LocalDateTime.now(),
+                previousData = PreviousData.TODAY
             )
         )
 
@@ -57,7 +59,7 @@ class ReminderViewModel @Inject constructor(
     }
 
 
-   private fun createReminder(reminder: Reminder) {
+    fun createReminder(reminder: Reminder) {
         reminderRepository.createReminder(reminder).onEach { result ->
             when (result) {
                 is Resource.Success -> {

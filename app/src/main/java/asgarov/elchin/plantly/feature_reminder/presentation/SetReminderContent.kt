@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import asgarov.elchin.plantly.feature_reminder.domain.model.PreviousData
 import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 import asgarov.elchin.plantly.feature_reminder.domain.model.ReminderType
 
@@ -34,6 +35,7 @@ fun SetReminderContent(
     var selectedHour by remember { mutableStateOf(reminder.reminderTime.hour % 12) }
     var selectedMinute by remember { mutableStateOf(reminder.reminderTime.minute) }
     var isAM by remember { mutableStateOf(reminder.reminderTime.hour < 12) }
+    var selectedPreviousData by remember { mutableStateOf(reminder.previousData) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         PlantHeader(plantName = reminder.plantName)
@@ -87,6 +89,22 @@ fun SetReminderContent(
                 onHourChange = { selectedHour = it },
                 onMinuteChange = { selectedMinute = it },
                 onPeriodChange = { isAM = it }
+            )
+        }
+
+        ExpandableSection(
+            title = "Last Done",
+            summary = {
+                Text(
+                    text = selectedPreviousData.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() },
+                    color = Color.Gray,
+                    fontSize = 16.sp
+                )
+            }
+        ) {
+            PreviousDataPickerUI(
+                selectedOption = selectedPreviousData,
+                onOptionSelected = { selectedPreviousData = it }
             )
         }
 
@@ -311,8 +329,8 @@ fun <T> PickerColumn(
     LazyColumn(
         state = listState,
         modifier = Modifier
-            .width(80.dp)
-            .height(90.dp),
+            .width(240.dp)
+            .height(110.dp),
         contentPadding = PaddingValues(vertical = 8.dp),
         flingBehavior = flingBehavior
     ) {
@@ -326,7 +344,10 @@ fun <T> PickerColumn(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = value.toString(),
+                    text = when (value) {
+                        is PreviousData -> value.toDisplayString()
+                        else -> value.toString()
+                    },
                     fontSize = if (value == selectedValue) 20.sp else 16.sp,
                     fontWeight = if (value == selectedValue) FontWeight.Bold else FontWeight.Normal,
                     color = Color.Black
@@ -407,4 +428,35 @@ fun ToggleButton(text: String, selected: Boolean, onClick: () -> Unit) {
             fontWeight = FontWeight.Bold
         )
     }
+}
+
+@Composable
+fun PreviousDataPickerUI(
+    selectedOption: PreviousData,
+    onOptionSelected: (PreviousData) -> Unit
+) {
+    val options = PreviousData.values().toList()
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = "Last done: ${selectedOption.toDisplayString()}",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1B5E20)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PickerColumn(
+            values = options,
+            selectedValue = selectedOption,
+            onValueChange = { onOptionSelected(it) }
+        )
+    }
+}
+
+
+fun PreviousData.toDisplayString(): String {
+    return name.lowercase()
+        .split("_")
+        .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
 }

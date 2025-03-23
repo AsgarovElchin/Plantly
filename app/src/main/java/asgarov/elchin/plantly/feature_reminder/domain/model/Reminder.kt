@@ -10,5 +10,6 @@ data class Reminder(
     val repeatEvery: Int,
     val repeatUnit: String,
     val reminderTime: LocalDateTime,
-    val previousData: PreviousData
+    val previousData: PreviousData,
+    val nextReminderDateTime: LocalDateTime,
 )

@@ -114,7 +114,8 @@ fun SetReminderContent(
                 reminderType = ReminderType.valueOf(selectedAction.uppercase()),
                 repeatEvery = selectedNumber,
                 repeatUnit = selectedUnit,
-                reminderTime = reminder.reminderTime.withHour(finalHour).withMinute(selectedMinute)
+                reminderTime = reminder.reminderTime.withHour(finalHour).withMinute(selectedMinute),
+                previousData = selectedPreviousData
             )
             onSave(updatedReminder)
         })

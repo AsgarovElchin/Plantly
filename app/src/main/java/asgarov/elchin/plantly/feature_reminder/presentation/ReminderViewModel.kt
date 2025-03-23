@@ -51,7 +51,8 @@ class ReminderViewModel @Inject constructor(
                 repeatEvery = 1,
                 repeatUnit = "Days",
                 reminderTime = LocalDateTime.now(),
-                previousData = PreviousData.TODAY
+                previousData = PreviousData.TODAY,
+                nextReminderDateTime = LocalDateTime.now()
             )
         )
 

@@ -44,7 +44,7 @@ import coil3.compose.SubcomposeAsyncImage
 fun GardenPlantItem(
     gardenPlant: GardenPlant,
     onItemClick: (GardenPlant) -> Unit,
-    onDeleteClick: (Long) -> Unit,
+    onDeleteClick: (Long, Long) -> Unit,
     onAddReminderClick: (GardenPlant) -> Unit,
     reminders: List<Reminder>,
     onEditReminderClick: (Long, String) -> Unit
@@ -151,7 +151,7 @@ fun GardenPlantItem(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
-                        onClick = { onDeleteClick(gardenPlant.id) },
+                        onClick = { onDeleteClick(gardenPlant.id, reminders.find { it.plantId == gardenPlant.id }?.id ?: -1) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
                     ) {

@@ -98,4 +98,31 @@ class ReminderViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+
+    fun deleteReminderByPlant(id: Long) {
+        reminderRepository.deleteReminder(id).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    val updatedList = _reminderListState.value.reminders?.toMutableList()?.apply {
+                        removeAll { it.id == id }
+                    } ?: emptyList()
+
+                    _reminderListState.value = _reminderListState.value.copy(
+                        reminders = updatedList,
+                        isLoading = false
+                    )
+                }
+                is Resource.Error -> {
+                    _reminderListState.value = _reminderListState.value.copy(
+                        error = result.message ?: "An error occurred while deleting the plant",
+                        isLoading = false
+                    )
+                }
+                is Resource.Loading -> {
+                    _reminderListState.value = _reminderListState.value.copy(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
 }

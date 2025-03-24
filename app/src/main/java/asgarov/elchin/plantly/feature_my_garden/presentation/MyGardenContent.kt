@@ -15,7 +15,7 @@ import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 fun MyGardenContent(
     gardenPlants: List<GardenPlant>,
     onItemClick: (GardenPlant) -> Unit,
-    onDeleteClick: (Long) -> Unit,
+    onDeleteClick: (Long, Long) -> Unit,
     onAddReminderClick: (GardenPlant) -> Unit,
     reminders: List<Reminder>,
     onEditReminderClick: (Long, String) -> Unit

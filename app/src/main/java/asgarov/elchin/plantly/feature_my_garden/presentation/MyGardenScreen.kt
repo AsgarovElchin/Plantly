@@ -17,43 +17,66 @@ import asgarov.elchin.plantly.core.navigation.NavigationRoute
 import asgarov.elchin.plantly.feature_reminder.presentation.ReminderViewModel
 
 @Composable
-fun MyGardenScreen(navController: NavController){
+fun MyGardenScreen(navController: NavController) {
     val gardenPlantViewModel: GardenPlantViewModel = hiltViewModel()
     val plantListGarden = gardenPlantViewModel.plantListGardenState.value
+
     val reminderViewModel: ReminderViewModel = hiltViewModel()
     val reminderListState = reminderViewModel.reminderListState.value
 
-    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
-        plantListGarden.plantGarden?.let { gardenPlants ->
-            reminderListState.reminders?.let {
-                MyGardenContent(gardenPlants = gardenPlants,
-                    onItemClick = { plant ->
-                        navController.navigate("plant_detail/${plant.id}")
-                    },
-                    onDeleteClick = {plantId->
-                        gardenPlantViewModel.deleteGardenPlant(plantId)}, onAddReminderClick = {gardenPlant->
-                        navController.navigate(NavigationRoute.SetReminderRoute.createRoute(gardenPlant.id, gardenPlant.commonName))
-                    }, it,
-                    onEditReminderClick = { reminderId, reminderType ->
-                        navController.navigate(NavigationRoute.EditReminderRoute.createRoute(reminderId, reminderType))
-                    })
-            }
-            }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp)
+    ) {
+        val gardenPlants = plantListGarden.plantGarden
+        val reminders = reminderListState.reminders
 
+        if (gardenPlants != null && reminders != null) {
+            MyGardenContent(
+                gardenPlants = gardenPlants,
+                reminders = reminders,
+                onItemClick = { plant ->
+                    navController.navigate("plant_detail/${plant.id}")
+                },
+                onDeleteClick = { plantId, reminderId ->
+                    gardenPlantViewModel.deleteGardenPlant(plantId)
+                    reminderViewModel.deleteReminderByPlant(reminderId)
+                },
+                onAddReminderClick = { gardenPlant ->
+                    navController.navigate(
+                        NavigationRoute.SetReminderRoute.createRoute(
+                            gardenPlant.id,
+                            gardenPlant.commonName
+                        )
+                    )
+                },
+                onEditReminderClick = { reminderId, reminderType ->
+                    navController.navigate(
+                        NavigationRoute.EditReminderRoute.createRoute(
+                            reminderId,
+                            reminderType
+                        )
+                    )
+                }
+            )
+        }
 
+        if (plantListGarden.error.isNotBlank()) {
+            Text(
+                text = plantListGarden.error,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .align(Alignment.Center)
+            )
+        }
 
-            if (plantListGarden.error.isNotBlank()) {
-                Text(
-                    text = plantListGarden.error,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(20.dp)
-                        .align(Alignment.Center)
-                )
-            }
-
-            if (plantListGarden.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+        if (plantListGarden.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
+}

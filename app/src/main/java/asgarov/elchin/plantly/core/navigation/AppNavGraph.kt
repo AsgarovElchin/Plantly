@@ -78,7 +78,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
 
         navigation(startDestination = NavigationRoute.ReminderRoute.route, route = "main_graph") {
             composable(NavigationRoute.ReminderRoute.route) {
-                ReminderScreen()
+                ReminderScreen(navController)
             }
             composable(NavigationRoute.ExploreRoute.route) {
                 ExploreScreen(navController)

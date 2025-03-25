@@ -66,6 +66,7 @@ class ReminderViewModel @Inject constructor(
                 is Resource.Success -> {
                     _reminderState.value = ReminderState(reminder = result.data)
                     _successMessage.value = "Reminder successfully added"
+                    getAllReminders()
                 }
                 is Resource.Error -> {
                     _reminderState.value = _reminderState.value.copy(
@@ -83,7 +84,7 @@ class ReminderViewModel @Inject constructor(
 
 
 
-    private fun getAllReminders() {
+     fun getAllReminders() {
         reminderRepository.getAllReminders().onEach { result ->
             when (result) {
                 is Resource.Success -> {

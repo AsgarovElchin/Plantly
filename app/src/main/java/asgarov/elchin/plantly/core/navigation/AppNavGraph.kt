@@ -93,13 +93,13 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 ProfileScreen()
             }
             composable(NavigationRoute.PlantDetailRoute.route) {
-                PlantDetailScreen()
+                PlantDetailScreen(navController)
             }
             composable(NavigationRoute.SetReminderRoute.route) {
                 SetReminderScreen(navController)
             }
             composable(NavigationRoute.EditReminderRoute.route) {
-                EditReminderScreen()
+                EditReminderScreen(navController)
             }
         }
 

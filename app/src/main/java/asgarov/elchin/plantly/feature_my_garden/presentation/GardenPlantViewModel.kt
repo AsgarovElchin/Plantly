@@ -24,7 +24,7 @@ class GardenPlantViewModel @Inject constructor(
         getAllGardenPlants()
     }
 
-    private fun getAllGardenPlants(){
+     fun getAllGardenPlants(){
         gardenPlantRepository.getAllGardenPlants().onEach {result->
             when(result){
                 is Resource.Success->{
@@ -53,6 +53,7 @@ class GardenPlantViewModel @Inject constructor(
                         plantGarden = updatedList,
                         isLoading = false
                     )
+
                 }
                 is Resource.Error -> {
                     _plantListGardenState.value = _plantListGardenState.value.copy(

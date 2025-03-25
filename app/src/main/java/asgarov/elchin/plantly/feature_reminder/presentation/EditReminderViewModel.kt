@@ -55,13 +55,20 @@ class EditReminderViewModel @Inject constructor(
             .onEach { result ->
                 when (result) {
                     is Resource.Success -> {
-                        _reminderState.value = ReminderState(reminder = result.data)
+                        _reminderState.value = _reminderState.value.copy(
+                            reminder = result.data,
+                            isLoading = false,
+                            successMessage = "Reminder updated successfully"
+                        )
                     }
                     is Resource.Error -> {
-                        _reminderState.value = ReminderState(error = result.message ?: "Error fetching reminder")
+                        _reminderState.value = _reminderState.value.copy(
+                            error = result.message ?: "Error updating reminder",
+                            isLoading = false
+                        )
                     }
                     is Resource.Loading -> {
-                        _reminderState.value = ReminderState(isLoading = true)
+                        _reminderState.value = _reminderState.value.copy(isLoading = true)
                     }
                 }
             }.launchIn(viewModelScope)

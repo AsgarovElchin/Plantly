@@ -8,6 +8,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,24 @@ fun MyGardenScreen(navController: NavController) {
 
     val reminderViewModel: ReminderViewModel = hiltViewModel()
     val reminderListState = reminderViewModel.reminderListState.value
+
+    val shouldRefresh = navController
+        .currentBackStackEntry
+        ?.savedStateHandle
+        ?.get<Boolean>("refresh_reminders") == true
+
+    LaunchedEffect(Unit) {
+        gardenPlantViewModel.getAllGardenPlants()
+    }
+
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            reminderViewModel.getAllReminders()
+            navController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.set("refresh_reminders", false)
+        }
+    }
 
     Box(
         modifier = Modifier

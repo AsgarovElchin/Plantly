@@ -8,15 +8,27 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun EditReminderScreen() {
+fun EditReminderScreen(navController: NavController) {
     val viewModel: EditReminderViewModel = hiltViewModel()
     val state = viewModel.reminderState.value
+
+    if (state.successMessage.isNotBlank()) {
+
+        LaunchedEffect(Unit) {
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("refresh_reminders", true)
+            navController.popBackStack()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -26,9 +38,8 @@ fun EditReminderScreen() {
         state.reminder?.let { reminder ->
             SetReminderContent(
                 reminder = reminder,
-                onSave = {
-                    updatedReminder->
-                    viewModel.updateReminder(reminder.id,updatedReminder)
+                onSave = { updatedReminder ->
+                    viewModel.updateReminder(reminder.id, updatedReminder)
                 }
             )
         }

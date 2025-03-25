@@ -31,11 +31,12 @@ fun SetReminderScreen(navController: NavController) {
                 }
             )
 
-            if(successMessage.isNotBlank()){
+            if (successMessage.isNotBlank()) {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("refresh_reminders", true)
                 navController.popBackStack()
             }
-
-
 
             if (reminderState.error.isNotBlank()) {
                 Text(
@@ -47,7 +48,6 @@ fun SetReminderScreen(navController: NavController) {
                         .align(Alignment.Center)
                 )
             }
-
 
             if (reminderState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

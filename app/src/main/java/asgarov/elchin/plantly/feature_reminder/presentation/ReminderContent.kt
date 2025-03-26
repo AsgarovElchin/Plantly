@@ -13,6 +13,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,13 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 import asgarov.elchin.plantly.feature_reminder.domain.model.ReminderType
+import coil3.compose.rememberAsyncImagePainter
 import java.time.format.DateTimeFormatter
 
 
 @Composable
 fun ReminderContent(
     reminders: List<Reminder>,
-    onPlantClick: (Long, ReminderType) -> Unit
+    onPlantClick: (Long, ReminderType) -> Unit,
+    fetchPlantImage: (Long) -> Unit,
+    plantImages: Map<Long, String>
 ) {
     val groupedByDateAndType = reminders.groupBy { it.nextReminderDateTime.toLocalDate() }
         .mapValues { it.value.groupBy { reminder -> reminder.reminderType } }
@@ -52,7 +56,9 @@ fun ReminderContent(
                     ReminderActionSection(
                         reminderType = type,
                         reminders = remindersForType,
-                        onPlantClick = onPlantClick
+                        onPlantClick = onPlantClick,
+                        fetchPlantImage = fetchPlantImage,
+                        plantImages = plantImages
                     )
                 }
             }
@@ -60,11 +66,14 @@ fun ReminderContent(
     }
 }
 
+
 @Composable
 fun ReminderActionSection(
     reminderType: ReminderType,
     reminders: List<Reminder>,
-    onPlantClick: (Long, ReminderType) -> Unit
+    onPlantClick: (Long, ReminderType) -> Unit,
+    fetchPlantImage: (Long) -> Unit,
+    plantImages: Map<Long, String>
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -86,6 +95,12 @@ fun ReminderActionSection(
 
             if (expanded) {
                 reminders.forEach { reminder ->
+                    LaunchedEffect(reminder.plantId) {
+                        if (!plantImages.containsKey(reminder.plantId)) {
+                            fetchPlantImage(reminder.plantId)
+                        }
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -93,14 +108,26 @@ fun ReminderActionSection(
                                 onPlantClick(reminder.id, reminderType)
                             }
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = reminder.plantName)
-                        Text(
-                            text = reminder.nextReminderDateTime.toLocalTime()
-                                .format(DateTimeFormatter.ofPattern("HH:mm"))
+                        androidx.compose.foundation.Image(
+                            painter = rememberAsyncImagePainter(
+                                model = plantImages[reminder.plantId] ?: ""
+                            ),
+                            contentDescription = reminder.plantName,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .weight(0.2f)
                         )
+
+                        Column(modifier = Modifier.weight(0.8f)) {
+                            Text(text = reminder.plantName)
+                            Text(
+                                text = reminder.nextReminderDateTime.toLocalTime()
+                                    .format(DateTimeFormatter.ofPattern("HH:mm"))
+                            )
+                        }
                     }
                 }
             }

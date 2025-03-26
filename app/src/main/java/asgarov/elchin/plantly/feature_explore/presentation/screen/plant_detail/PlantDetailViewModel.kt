@@ -20,67 +20,68 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class PlantDetailViewModel @Inject constructor(
     private val plantDetailRepository: PlantDetailRepository,
     private val plantCareRepository: PlantCareRepository,
     private val plantGardenRepository: GardenPlantRepository,
-    savedStateHandle: SavedStateHandle
-):ViewModel() {
+) : ViewModel() {
 
     private val _plantDetailState = mutableStateOf(PlantDetailState())
-
     val plantDetailState: State<PlantDetailState> = _plantDetailState
 
     private val _plantCareState = mutableStateOf(PlantCareState())
-
     val plantCareState: State<PlantCareState> = _plantCareState
 
     private val _plantGardenState = mutableStateOf(PlantGardenState())
     val plantGardenState: State<PlantGardenState> = _plantGardenState
 
-    init {
-        val plantId = savedStateHandle.get<String>("plantId")?.toIntOrNull() ?: 0
-        getPlantDetailsById(plantId)
-        getPlantCareGuidesById(plantId)
-    }
+    private val _plantImageMap = mutableStateOf<Map<Long, String>>(emptyMap())
+    val plantImageMap: State<Map<Long, String>> = _plantImageMap
 
+    fun getPlantDetailsById(id: Int) {
+        plantDetailRepository.getPlantDetailsById(id).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    result.data?.let { plant ->
+                        val imageUrl = plant.defaultImage?.thumbnailUrl ?: ""
+                        _plantImageMap.value = _plantImageMap.value + (id.toLong() to imageUrl)
+                        _plantDetailState.value = PlantDetailState(plantDetail = plant)
+                        Log.d("TAG", "Fetched plant image: $imageUrl")
+                    }
+                }
 
-    private fun getPlantDetailsById(id:Int){
-        plantDetailRepository.getPlantDetailsById(id).onEach {result->
-            when(result){
-                is Resource.Success->{
-                    _plantDetailState.value = PlantDetailState(plantDetail = result.data)
-                    Log.d("TAG", "getPlantDetailsById: ${result.data}")
+                is Resource.Error -> {
+                    _plantDetailState.value = PlantDetailState(
+                        error = result.message ?: "An unexpected error occurred"
+                    )
                 }
-                is Resource.Error->{
-                    _plantDetailState.value = PlantDetailState(error = result.message?: "An unexpected error occurred")
-                }
-                is Resource.Loading->{
+
+                is Resource.Loading -> {
                     _plantDetailState.value = PlantDetailState(isLoading = true)
-
                 }
             }
-
         }.launchIn(viewModelScope)
     }
 
-    private fun getPlantCareGuidesById(speciesId:Int){
-        plantCareRepository.getPlantCareGuidesById(speciesId).onEach {result->
-            when(result){
-                is Resource.Success->{
+    fun getPlantCareGuidesById(speciesId: Int) {
+        plantCareRepository.getPlantCareGuidesById(speciesId).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
                     _plantCareState.value = PlantCareState(plantCare = result.data)
-                    Log.d("TAG", "getPlantCareGuidesById: ${result.data}")
                 }
-                is Resource.Error->{
-                    _plantCareState.value = PlantCareState(error = result.message?: "An unexpected error occurred")
-                }
-                is Resource.Loading->{
-                    _plantCareState.value = PlantCareState(isLoading = true)
 
+                is Resource.Error -> {
+                    _plantCareState.value = PlantCareState(
+                        error = result.message ?: "An unexpected error occurred"
+                    )
+                }
+
+                is Resource.Loading -> {
+                    _plantCareState.value = PlantCareState(isLoading = true)
                 }
             }
-
         }.launchIn(viewModelScope)
     }
 
@@ -103,20 +104,23 @@ class PlantDetailViewModel @Inject constructor(
 
             _plantGardenState.value = PlantGardenState(isLoading = true)
 
-            plantGardenRepository.addGardenPlant(gardenPlant).onEach {result->
-                when(result){
-                    is Resource.Success->{
+            plantGardenRepository.addGardenPlant(gardenPlant).onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
                         _plantGardenState.value = PlantGardenState(plantGarden = result.data)
                     }
-                    is Resource.Error->{
-                        _plantGardenState.value = PlantGardenState(error = result.message?: "An unexpected error occurred")
+
+                    is Resource.Error -> {
+                        _plantGardenState.value = PlantGardenState(
+                            error = result.message ?: "An unexpected error occurred"
+                        )
                     }
-                    is Resource.Loading->{
+
+                    is Resource.Loading -> {
                         _plantGardenState.value = PlantGardenState(isLoading = true)
                     }
                 }
             }.launchIn(viewModelScope)
         }
-
-
-}}
+    }
+}

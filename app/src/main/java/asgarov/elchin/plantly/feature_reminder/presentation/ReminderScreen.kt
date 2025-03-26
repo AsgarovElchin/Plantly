@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
+import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.PlantDetailViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -22,14 +23,17 @@ import kotlinx.coroutines.flow.collectLatest
 fun ReminderScreen(
     navController: NavController,
 ) {
-    val viewModel: ReminderViewModel = hiltViewModel()
-    val state = viewModel.reminderListState.value
+    val reminderViewModel: ReminderViewModel = hiltViewModel()
+    val plantDetailViewModel: PlantDetailViewModel = hiltViewModel()
+
+    val state = reminderViewModel.reminderListState.value
+    val plantImages = plantDetailViewModel.plantImageMap.value
 
     LaunchedEffect(key1 = navController) {
         navController.currentBackStackEntryFlow.collectLatest { entry ->
             val shouldRefresh = entry.savedStateHandle.get<Boolean>("refresh_reminders") ?: false
             if (shouldRefresh) {
-                viewModel.getAllReminders()
+                reminderViewModel.getAllReminders()
                 entry.savedStateHandle.set("refresh_reminders", false)
             }
         }
@@ -65,7 +69,11 @@ fun ReminderScreen(
                             reminderType = reminderType.name
                         )
                         navController.navigate(route)
-                    }
+                    },
+                    fetchPlantImage = { plantId ->
+                        plantDetailViewModel.getPlantDetailsById(plantId.toInt())
+                    },
+                    plantImages = plantImages
                 )
             }
 

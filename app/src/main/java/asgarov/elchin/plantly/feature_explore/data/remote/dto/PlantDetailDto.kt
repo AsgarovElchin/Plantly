@@ -13,7 +13,7 @@ data class PlantDetailDto(
     @SerializedName("cuisine") val cuisine: Boolean,
     @SerializedName("cultivar") val cultivar: Any,
     @SerializedName("cycle") val cycle: String,
-    @SerializedName("default_image") val defaultImage: DefaultImageDto,
+    @SerializedName("default_image") val defaultImage: DefaultImageDto?,
     @SerializedName("description") val description: String,
     @SerializedName("dimensions") val dimensions: List<DimensionDto>,
     @SerializedName("drought_tolerant") val droughtTolerant: Boolean,

@@ -1,5 +1,6 @@
 package asgarov.elchin.plantly.feature_explore.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import asgarov.elchin.plantly.R
 import asgarov.elchin.plantly.feature_explore.domain.model.Plant
 import coil3.compose.SubcomposeAsyncImage
 
@@ -48,12 +52,11 @@ fun PlantItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
-                    .clip(CardDefaults.shape)
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
             ) {
                 SubcomposeAsyncImage(
                     model = plant.image?.originalUrl,
                     contentDescription = "Plant Image",
-                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     loading = {
                         Box(
@@ -65,6 +68,14 @@ fun PlantItem(
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
+                    },
+                    error = {
+                        Image(
+                            painter = painterResource(id = R.drawable.dracaena),
+                            contentDescription = "Placeholder Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
                     }
                 )
             }

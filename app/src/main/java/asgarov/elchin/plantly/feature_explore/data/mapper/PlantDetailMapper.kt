@@ -8,7 +8,7 @@ fun PlantDetailDto.toPlantDetail(): PlantDetail {
         id = id,
         commonName = commonName,
         scientificName = scientificName,
-        defaultImage = defaultImage.toDefaultImage(),
+        defaultImage = defaultImage?.toDefaultImage(),
         description = description,
         genus = genus,
         type = type,

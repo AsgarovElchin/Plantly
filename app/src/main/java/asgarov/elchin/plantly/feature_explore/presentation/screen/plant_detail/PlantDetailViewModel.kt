@@ -1,6 +1,5 @@
 package asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -26,6 +25,7 @@ class PlantDetailViewModel @Inject constructor(
     private val plantDetailRepository: PlantDetailRepository,
     private val plantCareRepository: PlantCareRepository,
     private val plantGardenRepository: GardenPlantRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _plantDetailState = mutableStateOf(PlantDetailState())
@@ -40,6 +40,16 @@ class PlantDetailViewModel @Inject constructor(
     private val _plantImageMap = mutableStateOf<Map<Long, String>>(emptyMap())
     val plantImageMap: State<Map<Long, String>> = _plantImageMap
 
+    init {
+        val plantId = savedStateHandle.get<Int>("plantId")
+        if (plantId != null) {
+            getPlantDetailsById(plantId)
+            getPlantCareGuidesById(plantId)
+        } else {
+            _plantDetailState.value = PlantDetailState(error = "Missing plantId!")
+        }
+    }
+
     fun getPlantDetailsById(id: Int) {
         plantDetailRepository.getPlantDetailsById(id).onEach { result ->
             when (result) {
@@ -48,7 +58,6 @@ class PlantDetailViewModel @Inject constructor(
                         val imageUrl = plant.defaultImage?.thumbnailUrl ?: ""
                         _plantImageMap.value = _plantImageMap.value + (id.toLong() to imageUrl)
                         _plantDetailState.value = PlantDetailState(plantDetail = plant)
-                        Log.d("TAG", "Fetched plant image: $imageUrl")
                     }
                 }
 
@@ -122,5 +131,4 @@ class PlantDetailViewModel @Inject constructor(
                 }
             }.launchIn(viewModelScope)
         }
-    }
-}
+    }}

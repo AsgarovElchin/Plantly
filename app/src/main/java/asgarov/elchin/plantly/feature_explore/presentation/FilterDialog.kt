@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+
 
 @Composable
 fun FilterDialog(
@@ -31,11 +33,26 @@ fun FilterDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title, style = MaterialTheme.typography.titleMedium) },
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        title = {
+            Text(
+                title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+        },
         text = {
-            Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 filterOptions.forEach { (category, options) ->
-                    FilterSection(category, options, selectedValues[category].orEmpty()) {
+                    FilterSection(
+                        title = category,
+                        options = options,
+                        selectedValue = selectedValues[category].orEmpty()
+                    ) {
                         selectedValues = selectedValues.toMutableMap().apply { put(category, it) }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -46,13 +63,16 @@ fun FilterDialog(
             Button(
                 onClick = {
                     onApply(selectedValues.mapValues { it.value.ifEmpty { null } })
-                }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Apply")
+                Text("Apply", color = MaterialTheme.colorScheme.onPrimary)
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Cancel") }
+            OutlinedButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
         }
     )
 }

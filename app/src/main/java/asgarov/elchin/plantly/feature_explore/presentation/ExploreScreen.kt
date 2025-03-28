@@ -1,21 +1,19 @@
 package asgarov.elchin.plantly.feature_explore.presentation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
@@ -31,89 +29,86 @@ fun ExploreScreen(navController: NavController) {
         "Order" to listOf("Asc", "Desc"),
         "Edible" to listOf("Yes", "No"),
         "Poisonous" to listOf("Yes", "No"),
-        "Cycle" to listOf("Perennial", "Annual", "Biennial","Biannual"),
-        "Watering" to listOf("Frequent", "Average", "Minimum","None"),
+        "Cycle" to listOf("Perennial", "Annual", "Biennial", "Biannual"),
+        "Watering" to listOf("Frequent", "Average", "Minimum", "None"),
         "Sunlight" to listOf("Full Shade", "Part Shade", "Sun Part Shade", "Full Sun"),
         "Indoor" to listOf("Yes", "No")
     )
 
     val currentFilterValues = mapOf(
         "Order" to filter.order.orEmpty(),
-        "Edible" to (filter.edible.toString() ?: ""),
-        "Poisonous" to (filter.poisonous.toString() ?:""),
+        "Edible" to filter.edible?.toString().orEmpty(),
+        "Poisonous" to filter.poisonous?.toString().orEmpty(),
         "Cycle" to filter.cycle.orEmpty(),
         "Watering" to filter.watering.orEmpty(),
         "Sunlight" to filter.sunlight.orEmpty(),
-        "Indoor" to (filter.indoor.toString() ?: "")
+        "Indoor" to filter.indoor?.toString().orEmpty()
     )
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        FilterBar(
-            searchQuery = filter.query.orEmpty(),
-            labelText = "Plant name",
-            onSearchQueryChange = { newName ->
-                plantViewModel.updateFilter(filter.copy(query = newName))
-            },
-            onFilterClick = { showAdvancedFilters = true }
-        )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                onClick = { showAdvancedFilters = true }
+            ) {
+                Icon(imageVector = Icons.Default.FilterList, contentDescription = "Filter")
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { paddingValues ->
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)) {
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            when (plants.loadState.refresh) {
-                is androidx.paging.LoadState.Loading -> {
-                    CircularProgressIndicator()
+            FilterBar(
+                searchQuery = filter.query.orEmpty(),
+                labelText = "Plant name",
+                onSearchQueryChange = { newName ->
+                    plantViewModel.updateFilter { copy(query = newName) }
                 }
-                is androidx.paging.LoadState.Error -> {
-                    val error =
-                        (plants.loadState.refresh as androidx.paging.LoadState.Error).error
-                    Text(
-                        text = "Error: ${error.localizedMessage}",
+            )
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                when (plants.loadState.refresh) {
+                    is LoadState.Loading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    is LoadState.Error -> Text(
+                        text = "Error: ${(plants.loadState.refresh as LoadState.Error).error.localizedMessage}",
                         color = MaterialTheme.colorScheme.error
                     )
-                }
-                else -> {
-                    PlantContent(plants = plants, onItemClick = {plant->
+                    else -> PlantContent(plants = plants) { plant ->
                         navController.navigate(NavigationRoute.PlantDetailRoute.createRoute(plant.id))
-
-                    })
+                    }
                 }
             }
         }
     }
 
-
-    if (showAdvancedFilters) {
+    AnimatedVisibility(
+        visible = showAdvancedFilters,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         FilterDialog(
             title = "Advanced Filters",
             filterOptions = filterOptions,
             currentFilterValues = currentFilterValues,
             onDismiss = { showAdvancedFilters = false },
             onApply = { newFilter ->
-                plantViewModel.updateFilter(
-                    filter.copy(
+                plantViewModel.updateFilter {
+                    copy(
                         order = newFilter["Order"],
-                        edible = when (newFilter["Edible"]) {
-                            "Yes" -> true
-                            "No" -> false
-                            else -> null
-                        },
-                        poisonous = when (newFilter["Poisonous"]) {
-                            "Yes" -> true
-                            "No" -> false
-                            else -> null
-                        },
+                        edible = newFilter["Edible"]?.toBooleanStrictOrNull(),
+                        poisonous = newFilter["Poisonous"]?.toBooleanStrictOrNull(),
                         cycle = newFilter["Cycle"],
                         watering = newFilter["Watering"],
                         sunlight = newFilter["Sunlight"],
-                        indoor = when (newFilter["Indoor"]) {
-                            "Yes" -> true
-                            "No" -> false
-                            else -> null
-                        }
+                        indoor = newFilter["Indoor"]?.toBooleanStrictOrNull()
                     )
-                )
+                }
                 showAdvancedFilters = false
             }
         )

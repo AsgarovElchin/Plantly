@@ -6,9 +6,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import asgarov.elchin.plantly.authentication.presentation.screen.create_new_password.CreateNewPasswordScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.forgot_password.ForgotPasswordScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.login.LoginScreen
@@ -92,9 +94,15 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             composable(NavigationRoute.ProfileRoute.route) {
                 ProfileScreen()
             }
-            composable(NavigationRoute.PlantDetailRoute.route) {
-                PlantDetailScreen(navController)
+
+            composable(
+                route = "plant_detail/{plantId}",
+                arguments = listOf(navArgument("plantId") { type = NavType.IntType })
+            ) {
+                PlantDetailScreen(navController = navController)
             }
+
+
             composable(NavigationRoute.SetReminderRoute.route) {
                 SetReminderScreen(navController)
             }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Plantly" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.SplashScreen.Common." parent="Theme.SplashScreen.IconBackground">
+    <style name="Theme.SplashScreen.Common" parent="Theme.SplashScreen.IconBackground" tools:ignore="PrivateResource">
         <item name="windowSplashScreenBackground">#FFFFFF</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_icon</item>
         <item name="windowSplashScreenIconBackgroundColor">#FFFFFF</item>

@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import asgarov.elchin.plantly.core.navigation.AppNavGraph
 import asgarov.elchin.plantly.core.navigation.BottomNavBar
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
-import asgarov.elchin.plantly.ui.theme.PlantlyTheme
+import asgarov.elchin.plantly.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +25,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PlantlyTheme {
+            AppTheme(
+                dynamicColor = false
+            ) {
                 val navController = rememberNavController()
                 val backStackEntry = navController.currentBackStackEntryAsState()
 

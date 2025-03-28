@@ -51,8 +51,6 @@ fun PlantDetailScreen(navController: NavController) {
             if (plantGardenState.plantGarden != null) {
                 coroutineScope.launch {
                     snackBarHostState.showSnackbar("Plant added to My Garden!")
-
-                    // Navigate and clean backstack
                     navController.navigate(NavigationRoute.MyGarden) {
                         popUpTo(NavigationRoute.PlantDetailRoute.route.substringBefore("/{")) {
                             inclusive = true
@@ -79,9 +77,10 @@ fun PlantDetailScreen(navController: NavController) {
             )
         }
 
-        // 🔄 Show loading spinner
         if (plantDetailState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }
+
+

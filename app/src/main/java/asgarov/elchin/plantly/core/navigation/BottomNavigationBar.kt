@@ -2,8 +2,10 @@ package asgarov.elchin.plantly.core.navigation
 
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +21,7 @@ import asgarov.elchin.plantly.R
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val topLevelRoutes = listOf(
-        TopLevelRoute("Reminder", NavigationRoute.ReminderRoute,R.drawable.alarm_icon),
+        TopLevelRoute("Reminder", NavigationRoute.ReminderRoute, R.drawable.alarm_icon),
         TopLevelRoute("Explore", NavigationRoute.ExploreRoute, R.drawable.search_icon),
         TopLevelRoute("Scan", NavigationRoute.ScanRoute, R.drawable.scan_icon),
         TopLevelRoute("My Garden", NavigationRoute.MyGarden, R.drawable.garden_icon),
@@ -30,16 +32,22 @@ fun BottomNavBar(navController: NavHostController) {
     val currentRoute = navBackStackEntry?.destination?.route
     var selectedIndex by remember { mutableIntStateOf(0) }
 
-    NavigationBar(containerColor = Color.White){
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
         topLevelRoutes.forEachIndexed { index, route ->
             NavigationBarItem(
                 icon = {
-                         Icon(
-                            painterResource(route.iconResId),
-                            contentDescription = route.name,
-                        )
+                    Icon(
+                        painterResource(route.iconResId),
+                        contentDescription = route.name,
+                        tint = if (index == selectedIndex) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 },
-                label = { Text(route.name) },
+                label = {
+                    Text(
+                        route.name,
+                        color = if (index == selectedIndex) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
                 selected = index == selectedIndex,
                 onClick = {
                     selectedIndex = index
@@ -50,7 +58,10 @@ fun BottomNavBar(navController: NavHostController) {
                             restoreState = true
                         }
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                )
             )
         }
     }

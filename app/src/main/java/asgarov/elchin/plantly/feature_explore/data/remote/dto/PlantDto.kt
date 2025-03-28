@@ -1,19 +1,21 @@
 package asgarov.elchin.plantly.feature_explore.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class PlantDto(
-    @SerializedName("authority") val authority: String?,
-    @SerializedName("common_name") val commonName: String,
-    @SerializedName("cultivar") val cultivar: String?,
-    @SerializedName("default_image") val defaultImage: DefaultImageDto?,
-    @SerializedName("family") val family: String?,
-    @SerializedName("genus") val genus: String?,
-    @SerializedName("hybrid") val hybrid: String?,
-    @SerializedName("id") val id: Int,
-    @SerializedName("other_name") val otherNames: List<String>,
-    @SerializedName("scientific_name") val scientificNames: List<String>,
-    @SerializedName("species_epithet") val speciesEpithet: String?,
-    @SerializedName("subspecies") val subspecies: String?,
-    @SerializedName("variety") val variety: String?
+    @Json(name = "authority") val authority: String?,
+    @Json(name = "common_name") val commonName: String,
+    @Json(name = "cultivar") val cultivar: String?,
+    @Json(name = "default_image") val defaultImage: DefaultImageDto?,
+    @Json(name = "family") val family: String?,
+    @Json(name = "genus") val genus: String?,
+    @Json(name = "hybrid") val hybrid: String?,
+    @Json(name = "id") val id: Int,
+    @Json(name = "other_name") val otherNames: List<String>,
+    @Json(name = "scientific_name") val scientificNames: List<String>,
+    @Json(name = "species_epithet") val speciesEpithet: String?,
+    @Json(name = "subspecies") val subspecies: String?,
+    @Json(name = "variety") val variety: String?
 )

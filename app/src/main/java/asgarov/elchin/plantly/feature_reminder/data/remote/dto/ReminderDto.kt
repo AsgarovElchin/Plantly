@@ -1,6 +1,8 @@
 package asgarov.elchin.plantly.feature_reminder.data.remote.dto
 
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ReminderDto(
     val id: Long? = null,
     val plantId: Long,

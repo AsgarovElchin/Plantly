@@ -1,9 +1,11 @@
 package asgarov.elchin.plantly.feature_explore.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 
+@JsonClass(generateAdapter = true)
 data class HardinessLocationDto(
-    @SerializedName("full_iframe") val fullIframe: String,
-    @SerializedName("full_url") val fullUrl: String
+    @Json(name = "full_iframe") val fullIframe: String,
+    @Json(name = "full_url") val fullUrl: String
 )

@@ -89,7 +89,6 @@ dependencies {
 
     // Retrofit
     implementation (libs.retrofit)
-    implementation (libs.converter.gson)
     implementation (libs.okhttp)
     implementation (libs.logging.interceptor)
 
@@ -124,6 +123,11 @@ dependencies {
     // Google fonts
     implementation (libs.androidx.ui.text.google.fonts)
 
+    // Moshi for Json parsing
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+    ksp(libs.moshi.kotlin.codegen)
 
 
 

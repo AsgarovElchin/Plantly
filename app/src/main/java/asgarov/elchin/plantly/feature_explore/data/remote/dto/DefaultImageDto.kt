@@ -1,14 +1,16 @@
 package asgarov.elchin.plantly.feature_explore.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class DefaultImageDto(
-    @SerializedName("license") val license: Int,
-    @SerializedName("license_name") val licenseName: String,
-    @SerializedName("license_url") val licenseUrl: String,
-    @SerializedName("medium_url") val mediumUrl: String?,
-    @SerializedName("original_url") val originalUrl: String?,
-    @SerializedName("regular_url") val regularUrl: String?,
-    @SerializedName("small_url") val smallUrl: String?,
-    @SerializedName("thumbnail") val thumbnailUrl: String?
+    @Json(name = "license") val license: Int,
+    @Json(name = "license_name") val licenseName: String,
+    @Json(name = "license_url") val licenseUrl: String,
+    @Json(name = "medium_url") val mediumUrl: String?,
+    @Json(name = "original_url") val originalUrl: String?,
+    @Json(name = "regular_url") val regularUrl: String?,
+    @Json(name = "small_url") val smallUrl: String?,
+    @Json(name = "thumbnail") val thumbnailUrl: String?
 )

@@ -1,11 +1,13 @@
 package asgarov.elchin.plantly.feature_explore.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class PlantCareGuideDataDto(
-    @SerializedName("common_name") val commonName: String,
-    @SerializedName("id") val id: Int,
-    @SerializedName("scientific_name") val scientificName: List<String>,
-    @SerializedName("section") val sections: List<CareSectionDto>,
-    @SerializedName("species_id") val speciesId: Int
+    @Json(name = "common_name") val commonName: String,
+    @Json(name = "id") val id: Int,
+    @Json(name = "scientific_name") val scientificName: List<String>,
+    @Json(name = "section") val sections: List<CareSectionDto>,
+    @Json(name = "species_id") val speciesId: Int
 )

@@ -1,13 +1,15 @@
 package asgarov.elchin.plantly.feature_explore.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class PlantCareGuidesDto(
-    @SerializedName("current_page") val currentPage: Int,
-    @SerializedName("data") val data: List<PlantCareGuideDataDto>,
-    @SerializedName("from") val from: Int,
-    @SerializedName("last_page") val lastPage: Int,
-    @SerializedName("per_page") val perPage: Int,
-    @SerializedName("to") val to: Int,
-    @SerializedName("total") val total: Int
+    @Json(name = "current_page") val currentPage: Int,
+    @Json(name = "data") val data: List<PlantCareGuideDataDto>,
+    @Json(name = "from") val from: Int,
+    @Json(name = "last_page") val lastPage: Int,
+    @Json(name = "per_page") val perPage: Int,
+    @Json(name = "to") val to: Int,
+    @Json(name = "total") val total: Int
 )

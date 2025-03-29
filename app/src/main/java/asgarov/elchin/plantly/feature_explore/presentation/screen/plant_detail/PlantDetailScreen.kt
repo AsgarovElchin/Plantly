@@ -19,14 +19,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
+import asgarov.elchin.plantly.feature_my_garden.presentation.GardenPlantViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun PlantDetailScreen(navController: NavController) {
-    val viewModel: PlantDetailViewModel = hiltViewModel()
-    val plantDetailState = viewModel.plantDetailState.value
-    val plantCareState = viewModel.plantCareState.value
-    val plantGardenState = viewModel.plantGardenState.value
+    val plantViewModel: PlantDetailViewModel = hiltViewModel()
+    val gardenViewModel: GardenPlantViewModel = hiltViewModel()
+
+    val plantDetailState = plantViewModel.plantDetailState.value
+    val plantCareState = plantViewModel.plantCareState.value
+    val plantGardenState = plantViewModel.plantGardenState.value
+    val gardenPlantsState = gardenViewModel.plantListGardenState.value
 
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -35,11 +39,24 @@ fun PlantDetailScreen(navController: NavController) {
         val plantCareGuideData = plantCareState.plantCare
 
         plantDetailState.plantDetail?.let { plant ->
+            val isAlreadyInGarden = gardenPlantsState.plantGarden?.any { it.id == plant.id.toLong() } == true
+
             PlantDetailContent(
                 plant = plant,
                 plantCareGuideData = plantCareGuideData,
+                isPlantAlreadyInGarden = isAlreadyInGarden,
                 onAddToGardenClick = {
-                    viewModel.addPlantToGarden(plant)
+                    plantViewModel.addPlantToGarden(plant)
+                    true
+                },
+                onNavigateToGarden = {
+                    coroutineScope.launch {
+                        navController.navigate(NavigationRoute.MyGarden.route) {
+                            popUpTo(NavigationRoute.ExploreRoute.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             )
         }
@@ -48,11 +65,6 @@ fun PlantDetailScreen(navController: NavController) {
             if (plantGardenState.plantGarden != null) {
                 coroutineScope.launch {
                     snackBarHostState.showSnackbar("Plant added to My Garden!")
-                    navController.navigate(NavigationRoute.MyGarden) {
-                        popUpTo(NavigationRoute.PlantDetailRoute.route.substringBefore("/{")) {
-                            inclusive = true
-                        }
-                    }
                 }
             } else if (plantGardenState.error.isNotBlank()) {
                 coroutineScope.launch {
@@ -79,4 +91,3 @@ fun PlantDetailScreen(navController: NavController) {
         }
     }
 }
-

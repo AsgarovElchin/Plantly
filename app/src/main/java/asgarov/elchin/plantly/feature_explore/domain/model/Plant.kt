@@ -4,5 +4,5 @@ data class Plant(
     val id: Int,
     val commonName: String,
     val scientificNames: List<String>,
-    val image: DefaultImage?
+    val image: DefaultImage
 )

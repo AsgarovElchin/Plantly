@@ -34,9 +34,9 @@ class PlantPagingSource(
                 indoor = filter.indoor
             )
 
-            val plants = response.data.map { it.toPlant() }
+            val plants = response.data?.map { it.toPlant() }.orEmpty()
             val prevKey = if (page == 1) null else page - 1
-            val nextKey = if (page < response.lastPage) page + 1 else null
+            val nextKey = if (page < (response.lastPage ?: page)) page + 1 else null
 
             LoadResult.Page(
                 data = plants,

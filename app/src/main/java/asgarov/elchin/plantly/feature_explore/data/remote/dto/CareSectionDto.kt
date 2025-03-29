@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CareSectionDto(
-    val description: String,
-    val id: Int,
-    val type: String
+    val description: String?,
+    val id: Int?,
+    val type: String?
 )

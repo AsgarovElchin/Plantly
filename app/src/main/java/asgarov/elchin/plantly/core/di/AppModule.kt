@@ -2,6 +2,7 @@ package asgarov.elchin.plantly.core.di
 
 import asgarov.elchin.plantly.core.utils.Constants
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountAdapter
+import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountData
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -37,10 +38,15 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
+        val pruningCountDataAdapter = Moshi.Builder()
+            .build()
+            .adapter(PruningCountData::class.java)
+
         return Moshi.Builder()
-            .add(PruningCountAdapter())
+            .add(PruningCountAdapter(pruningCountDataAdapter))
             .build()
     }
+
 
     @Provides
     @Singleton

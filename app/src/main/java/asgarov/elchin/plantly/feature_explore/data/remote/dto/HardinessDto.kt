@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class HardinessDto(
-    val max: String,
-    val min: String
+    val max: String?,
+    val min: String?
 )

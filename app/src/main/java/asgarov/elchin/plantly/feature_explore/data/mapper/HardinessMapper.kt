@@ -5,7 +5,7 @@ import asgarov.elchin.plantly.feature_explore.domain.model.Hardiness
 
 fun HardinessDto.toHardiness(): Hardiness {
     return Hardiness(
-        min = min,
-        max = max
+        min = min ?: "Unknown",
+        max = max ?: "Unknown"
     )
 }

@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class WateringGeneralBenchmarkDto(
-    val unit: String,
-    val value: Any
+    val unit: String?,
+    val value: Any?
 )

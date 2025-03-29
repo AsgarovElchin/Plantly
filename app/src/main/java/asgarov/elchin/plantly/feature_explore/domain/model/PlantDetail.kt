@@ -5,7 +5,7 @@ data class PlantDetail(
     val description: String,
     val commonName: String,
     val scientificName: List<String>,
-    val defaultImage: DefaultImage?,
+    val defaultImage: DefaultImage,
     val genus: String,
     val type: String,
     val cycle: String,

@@ -4,5 +4,5 @@ import asgarov.elchin.plantly.feature_explore.data.remote.dto.PlantCareGuidesDto
 import asgarov.elchin.plantly.feature_explore.domain.model.PlantCareGuideData
 
 fun PlantCareGuidesDto.plantCareGuidesData(): List<PlantCareGuideData> {
-    return data.map { it.plantCareGuideData() }
+    return data.orEmpty().filterNotNull().map { it.plantCareGuideData() }
 }

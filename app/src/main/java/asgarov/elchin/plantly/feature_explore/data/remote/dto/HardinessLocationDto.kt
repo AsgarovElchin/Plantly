@@ -6,6 +6,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class HardinessLocationDto(
-    @Json(name = "full_iframe") val fullIframe: String,
-    @Json(name = "full_url") val fullUrl: String
+    @Json(name = "full_iframe") val fullIframe: String?,
+    @Json(name = "full_url") val fullUrl: String?
 )

@@ -3,6 +3,7 @@ package asgarov.elchin.plantly.feature_explore.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -10,12 +11,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import asgarov.elchin.plantly.R
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
+
 
 @Composable
 fun ExploreScreen(navController: NavController) {
@@ -57,10 +61,11 @@ fun ExploreScreen(navController: NavController) {
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
-
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             FilterBar(
                 searchQuery = filter.query.orEmpty(),
                 labelText = "Plant name",
@@ -73,14 +78,45 @@ fun ExploreScreen(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                when (plants.loadState.refresh) {
-                    is LoadState.Loading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    is LoadState.Error -> Text(
-                        text = "Error: ${(plants.loadState.refresh as LoadState.Error).error.localizedMessage}",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    else -> PlantContent(plants = plants) { plant ->
-                        navController.navigate(NavigationRoute.PlantDetailRoute.createRoute(plant.id))
+                when {
+                    plants.loadState.refresh is LoadState.Loading -> {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+
+                    plants.loadState.refresh is LoadState.Error -> {
+                        val error = (plants.loadState.refresh as LoadState.Error).error
+                        Text(
+                            text = "Error: ${error.localizedMessage}",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+                    plants.loadState.refresh is LoadState.NotLoading && plants.itemCount == 0 -> {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize().padding(24.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.dracaena),
+                                contentDescription = "No Results",
+                                modifier = Modifier.size(120.dp)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "No plants found.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+
+                    else -> {
+                        PlantContent(plants = plants) { plant ->
+                            navController.navigate(
+                                NavigationRoute.PlantDetailRoute.createRoute(plant.id)
+                            )
+                        }
                     }
                 }
             }

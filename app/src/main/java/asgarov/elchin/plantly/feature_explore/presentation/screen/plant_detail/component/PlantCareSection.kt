@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.ContentCut
+import androidx.compose.material.icons.outlined.Opacity
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,14 +20,14 @@ import asgarov.elchin.plantly.feature_explore.domain.model.CareSection
 
 @Composable
 fun PlantCareSection(careSections: List<CareSection>) {
-    Column {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         careSections.forEach { careSection ->
             var expanded by remember { mutableStateOf(false) }
 
             val icon = when (careSection.type.lowercase()) {
-                "watering" -> Icons.Default.Opacity
-                "sunlight" -> Icons.Default.WbSunny
-                "pruning" -> Icons.Default.ContentCut
+                "watering" -> Icons.Outlined.Opacity
+                "sunlight" -> Icons.Outlined.WbSunny
+                "pruning" -> Icons.Outlined.ContentCut
                 else -> Icons.Default.Info
             }
 
@@ -33,7 +36,7 @@ fun PlantCareSection(careSections: List<CareSection>) {
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(
                     modifier = Modifier
@@ -50,7 +53,8 @@ fun PlantCareSection(careSections: List<CareSection>) {
                         Text(
                             text = careSection.type.replaceFirstChar { it.uppercase() },
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
@@ -59,17 +63,18 @@ fun PlantCareSection(careSections: List<CareSection>) {
                     Text(
                         text = if (expanded) careSection.description else careSection.description.take(100) + "...",
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = if (expanded) "Show Less" else "Read More",
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         modifier = Modifier
                             .clickable { expanded = !expanded }
-                            .padding(4.dp)
+                            .padding(vertical = 4.dp)
                     )
                 }
             }

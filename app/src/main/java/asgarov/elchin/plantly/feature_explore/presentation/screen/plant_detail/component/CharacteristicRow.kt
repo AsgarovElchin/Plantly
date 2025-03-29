@@ -24,8 +24,9 @@ fun CharacteristicRow(icon: ImageVector, title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -38,14 +39,15 @@ fun CharacteristicRow(icon: ImageVector, title: String, value: String) {
             Text(
                 text = title,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
         Text(
             text = value,
             fontSize = 16.sp,
-            color = Color.Gray
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

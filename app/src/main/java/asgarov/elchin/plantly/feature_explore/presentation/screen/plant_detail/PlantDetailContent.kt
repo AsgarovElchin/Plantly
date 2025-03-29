@@ -1,12 +1,15 @@
 package asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail
 
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -19,42 +22,40 @@ import androidx.compose.ui.unit.*
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import asgarov.elchin.plantly.feature_explore.domain.model.PlantDetail
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontStyle
 import asgarov.elchin.plantly.feature_explore.domain.model.PlantCareGuideData
 import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.component.CharacteristicSection
 import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.component.PlantCareSection
 import coil3.request.crossfade
 
 @Composable
-fun PlantDetailContent(plant: PlantDetail,
-                       plantCareGuideData: List<PlantCareGuideData>?,
-                       onAddToGardenClick: () -> Unit) {
+fun PlantDetailContent(
+    plant: PlantDetail,
+    plantCareGuideData: List<PlantCareGuideData>?,
+    onAddToGardenClick: () -> Unit
+) {
     val scrollState = rememberScrollState()
-    Box(modifier = Modifier.fillMaxSize()) {
-        PlantImageHeader(imageUrl = plant.defaultImage?.regularUrl, scrollState)
-        PlantInfoContent(plantCareGuideData, plant, scrollState, onAddToGardenClick)
-    }
-}
 
-@Composable
-fun PlantImageHeader(imageUrl: String?, scrollState: ScrollState) {
-    val blurRadius by animateFloatAsState(targetValue = if (scrollState.value > 50) 10f else 0f)
-
-    Box(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .blur(blurRadius.dp)
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
+                .data(plant.defaultImage?.regularUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = "Plant Image",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clip(MaterialTheme.shapes.medium),
             loading = {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -65,113 +66,94 @@ fun PlantImageHeader(imageUrl: String?, scrollState: ScrollState) {
                     modifier = Modifier.fillMaxSize().background(Color.Gray),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.ImageNotSupported, contentDescription = "Image not available", tint = Color.White)
+                    Icon(
+                        Icons.Default.ImageNotSupported,
+                        contentDescription = "Image not available",
+                        tint = Color.White
+                    )
                 }
             }
         )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Brush.verticalGradient(colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))))
-        )
-        Text(
-            text = imageUrl?.let { "Plant Overview" } ?: "No Image",
-            color = Color.White,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-        )
-    }
-}
-
-@Composable
-fun PlantInfoContent(
-    plantCareGuideData: List<PlantCareGuideData>?,
-    plant: PlantDetail,
-    scrollState: ScrollState,
-    onAddToGardenClick: () -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 250.dp)
-            .verticalScroll(scrollState),
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = plant.commonName,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = plant.scientificName.joinToString(", "),
-                fontSize = 18.sp,
-                color = Color.Gray,
-                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = if (expanded) plant.description else plant.description.take(300) + "...",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Justify
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = if (expanded) "Show Less" else "Read More",
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .clickable { expanded = !expanded }
-                    .padding(4.dp)
-            )
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text(
+            text = plant.commonName,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
 
-        Button(
+        Text(
+            text = plant.scientificName.joinToString(", "),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontStyle = FontStyle.Italic
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        var expanded by remember { mutableStateOf(false) }
+        Text(
+            text = if (expanded) plant.description else plant.description.take(300) + "...",
+            fontSize = 14.sp,
+            textAlign = TextAlign.Justify
+        )
+
+        Text(
+            text = if (expanded) "Show Less" else "Read More",
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .clickable { expanded = !expanded }
+                .padding(top = 4.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        OutlinedButton(
             onClick = onAddToGardenClick,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text(text = "Add to My Garden")
+            Icon(Icons.Outlined.Favorite, contentDescription = "Add", modifier = Modifier.size(18.dp))
+            Spacer(modifier = Modifier.width(6.dp))
+            Text("Add to My Garden")
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         CharacteristicSection(plant)
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Plant Care Guide",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Plant Care Guide",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(start = 20.dp),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
 
-            plantCareGuideData?.flatMap { it.careSections }?.let { careSections ->
-                if (careSections.isNotEmpty()) {
-                    PlantCareSection(careSections)
-                } else {
-                    Text(
-                        text = "No care information available",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
+        Spacer(modifier = Modifier.height(8.dp))
 
-        }
+        plantCareGuideData?.flatMap { it.careSections }?.let { careSections ->
+            AnimatedVisibility(
+                visible = careSections.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                PlantCareSection(careSections)
+            }
+        } ?: Text(
+            text = "No care information available",
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
-
-
 
 

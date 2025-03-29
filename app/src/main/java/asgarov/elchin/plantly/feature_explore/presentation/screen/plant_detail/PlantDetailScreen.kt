@@ -31,10 +31,7 @@ fun PlantDetailScreen(navController: NavController) {
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 32.dp)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         val plantCareGuideData = plantCareState.plantCare
 
         plantDetailState.plantDetail?.let { plant ->
@@ -82,5 +79,4 @@ fun PlantDetailScreen(navController: NavController) {
         }
     }
 }
-
 

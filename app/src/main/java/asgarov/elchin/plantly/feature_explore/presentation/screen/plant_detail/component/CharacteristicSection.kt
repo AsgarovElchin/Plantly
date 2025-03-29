@@ -3,20 +3,20 @@ package asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Eco
-import androidx.compose.material.icons.filled.Fax
-import androidx.compose.material.icons.filled.Grass
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalFlorist
-import androidx.compose.material.icons.filled.SyncAlt
-import androidx.compose.material.icons.filled.Thermostat
-import androidx.compose.material.icons.filled.ThermostatAuto
-import androidx.compose.material.icons.filled.Timeline
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.WarningAmber
-import androidx.compose.material.icons.filled.WaterDrop
-import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.outlined.AcUnit
+import androidx.compose.material.icons.outlined.Cached
+import androidx.compose.material.icons.outlined.Eco
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalFlorist
+import androidx.compose.material.icons.outlined.Opacity
+import androidx.compose.material.icons.outlined.Park
+import androidx.compose.material.icons.outlined.Pets
+import androidx.compose.material.icons.outlined.Report
+import androidx.compose.material.icons.outlined.Spa
+import androidx.compose.material.icons.outlined.Thermostat
+import androidx.compose.material.icons.outlined.Timeline
+import androidx.compose.material.icons.outlined.WaterDrop
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,33 +24,31 @@ import asgarov.elchin.plantly.feature_explore.domain.model.PlantDetail
 
 @Composable
 fun CharacteristicSection(plant: PlantDetail) {
-    Column(modifier = Modifier.padding(8.dp)) {
-        SectionTitle( "General Information")
-        CharacteristicRow(Icons.Filled.LocalFlorist, "Genus", plant.genus)
-        CharacteristicRow(Icons.Filled.Category, "Type", plant.type)
-        CharacteristicRow(Icons.Filled.SyncAlt, "Cycle", plant.cycle)
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        SectionTitle("General Information")
+        CharacteristicRow(Icons.Outlined.LocalFlorist, "Genus", plant.genus)
+        CharacteristicRow(Icons.Outlined.Park, "Type", plant.type)
+        CharacteristicRow(Icons.Outlined.Cached, "Cycle", plant.cycle)
 
         SectionTitle("Care Requirements")
-        CharacteristicRow(Icons.Filled.WbSunny, "Sunlight", plant.sunlight.joinToString())
-        CharacteristicRow(Icons.Filled.WaterDrop, "Watering", plant.watering)
-        CharacteristicRow(Icons.Filled.Timeline, "Growth Rate", plant.growthRate)
+        CharacteristicRow(Icons.Outlined.WbSunny, "Sunlight", plant.sunlight.joinToString())
+        CharacteristicRow(Icons.Outlined.Opacity, "Watering", plant.watering)
+        CharacteristicRow(Icons.Outlined.Timeline, "Growth Rate", plant.growthRate)
 
-        if (plant.hardiness != null) {
-            SectionTitle( "Hardiness & Temperature")
-            CharacteristicRow(Icons.Filled.Thermostat, "Min Temperature", "${plant.hardiness.min}°C")
-            CharacteristicRow(Icons.Filled.ThermostatAuto, "Max Temperature", "${plant.hardiness.max}°C")
+        plant.hardiness?.let {
+            SectionTitle("Hardiness & Temperature")
+            CharacteristicRow(Icons.Outlined.AcUnit, "Min Temp", "${it.min}°C")
+            CharacteristicRow(Icons.Outlined.Thermostat, "Max Temp", "${it.max}°C")
         }
 
-        SectionTitle( "Environmental Tolerance")
-        CharacteristicRow(Icons.Filled.Home, "Indoor?", if (plant.indoor) "Yes" else "No")
-        CharacteristicRow(Icons.Filled.Grass, "Drought Tolerant?", if (plant.droughtTolerant) "Yes" else "No")
+        SectionTitle("Environmental Tolerance")
+        CharacteristicRow(Icons.Outlined.Home, "Indoor?", if (plant.indoor) "Yes" else "No")
+        CharacteristicRow(Icons.Outlined.WaterDrop, "Drought Tolerant?", if (plant.droughtTolerant) "Yes" else "No")
 
-        SectionTitle( "Edibility & Toxicity")
-        CharacteristicRow(Icons.Filled.Eco, "Edible Leaf?", if (plant.edibleLeaf) "Yes" else "No")
-        CharacteristicRow(Icons.Filled.Fax, "Edible Fruit?", if (plant.edibleFruit) "Yes" else "No")
-        CharacteristicRow(Icons.Filled.Warning, "Poisonous to Pets?", if (plant.poisonousToPets) "Yes" else "No")
-        CharacteristicRow(Icons.Filled.WarningAmber, "Poisonous to Humans?", if (plant.poisonousToHumans) "Yes" else "No")
+        SectionTitle("Edibility & Toxicity")
+        CharacteristicRow(Icons.Outlined.Spa, "Edible Leaf?", if (plant.edibleLeaf) "Yes" else "No")
+        CharacteristicRow(Icons.Outlined.Eco, "Edible Fruit?", if (plant.edibleFruit) "Yes" else "No")
+        CharacteristicRow(Icons.Outlined.Pets, "Poisonous to Pets?", if (plant.poisonousToPets) "Yes" else "No")
+        CharacteristicRow(Icons.Outlined.Report, "Poisonous to Humans?", if (plant.poisonousToHumans) "Yes" else "No")
     }
 }
-
-

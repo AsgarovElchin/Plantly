@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.sp
 fun SectionTitle(title: String) {
     Text(
         text = title,
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
     )
 }

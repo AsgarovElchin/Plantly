@@ -1,8 +1,8 @@
 package asgarov.elchin.plantly.feature_reminder.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -42,21 +42,31 @@ fun ReminderScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         when {
             state.isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                    Text(
+                        text = "Loading reminders...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
             }
 
             state.error.isNotBlank() -> {
                 Text(
                     text = state.error,
                     color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
                         .align(Alignment.Center)
+                        .padding(16.dp)
                 )
             }
 
@@ -80,10 +90,12 @@ fun ReminderScreen(
             else -> {
                 Text(
                     text = "No reminders found.",
-                    color = MaterialTheme.colorScheme.error,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
     }
 }
+

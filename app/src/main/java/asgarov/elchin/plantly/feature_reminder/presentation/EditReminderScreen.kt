@@ -21,7 +21,6 @@ fun EditReminderScreen(navController: NavController) {
     val state = viewModel.reminderState.value
 
     if (state.successMessage.isNotBlank()) {
-
         LaunchedEffect(Unit) {
             navController.previousBackStackEntry
                 ?.savedStateHandle

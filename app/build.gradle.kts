@@ -129,6 +129,10 @@ dependencies {
     implementation(libs.converter.moshi)
     ksp(libs.moshi.kotlin.codegen)
 
+    // WheelPicker
+    implementation (libs.wheelpickercompose)
+
+
 
 
 

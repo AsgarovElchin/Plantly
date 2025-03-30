@@ -2,7 +2,6 @@ package asgarov.elchin.plantly.feature_my_garden.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +24,7 @@ fun MyGardenScreen(navController: NavController) {
     val reminderViewModel: ReminderViewModel = hiltViewModel()
     val reminderListState = reminderViewModel.reminderListState.value
 
-    val shouldRefresh = navController
-        .currentBackStackEntry
-        ?.savedStateHandle
-        ?.get<Boolean>("refresh_reminders") == true
+    val shouldRefresh = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>("refresh_reminders") == true
 
     LaunchedEffect(Unit) {
         gardenPlantViewModel.getAllGardenPlants()
@@ -37,17 +33,11 @@ fun MyGardenScreen(navController: NavController) {
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
             reminderViewModel.getAllReminders()
-            navController.currentBackStackEntry
-                ?.savedStateHandle
-                ?.set("refresh_reminders", false)
+            navController.currentBackStackEntry?.savedStateHandle?.set("refresh_reminders", false)
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 32.dp)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
         val gardenPlants = plantListGarden.plantGarden
         val reminders = reminderListState.reminders
 
@@ -64,18 +54,12 @@ fun MyGardenScreen(navController: NavController) {
                 },
                 onAddReminderClick = { gardenPlant ->
                     navController.navigate(
-                        NavigationRoute.SetReminderRoute.createRoute(
-                            gardenPlant.id,
-                            gardenPlant.commonName
-                        )
+                        NavigationRoute.SetReminderRoute.createRoute(gardenPlant.id, gardenPlant.commonName)
                     )
                 },
                 onEditReminderClick = { reminderId, reminderType ->
                     navController.navigate(
-                        NavigationRoute.EditReminderRoute.createRoute(
-                            reminderId,
-                            reminderType
-                        )
+                        NavigationRoute.EditReminderRoute.createRoute(reminderId, reminderType)
                     )
                 }
             )
@@ -85,17 +69,12 @@ fun MyGardenScreen(navController: NavController) {
             Text(
                 text = plantListGarden.error,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).padding(20.dp)
             )
         }
 
         if (plantListGarden.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }

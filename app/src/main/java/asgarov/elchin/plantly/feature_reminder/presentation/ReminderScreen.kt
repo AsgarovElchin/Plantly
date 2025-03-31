@@ -29,15 +29,10 @@ fun ReminderScreen(
     val state = reminderViewModel.reminderListState.value
     val plantImages = plantDetailViewModel.plantImageMap.value
 
-    LaunchedEffect(key1 = navController) {
-        navController.currentBackStackEntryFlow.collectLatest { entry ->
-            val shouldRefresh = entry.savedStateHandle.get<Boolean>("refresh_reminders") ?: false
-            if (shouldRefresh) {
-                reminderViewModel.getAllReminders()
-                entry.savedStateHandle.set("refresh_reminders", false)
-            }
-        }
+    LaunchedEffect(Unit) {
+        reminderViewModel.getAllReminders()
     }
+
 
     Box(
         modifier = Modifier

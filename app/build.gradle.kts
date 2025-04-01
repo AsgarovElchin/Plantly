@@ -28,6 +28,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "API_KEY", "\"${project.properties["API_KEY"]}\"")
+            buildConfigField("String", "GEMINI_API_KEY", "\"${project.properties["GEMINI_API_KEY"]}\"")
         }
         release {
             isMinifyEnabled = false
@@ -36,6 +37,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "API_KEY", "\"${project.properties["API_KEY"]}\"")
+            buildConfigField("String", "GEMINI_API_KEY", "\"${project.properties["GEMINI_API_KEY"]}\"")
         }
     }
     compileOptions {

@@ -33,9 +33,11 @@ fun MyGardenScreen(navController: NavController) {
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
             reminderViewModel.getAllReminders()
+            gardenPlantViewModel.getAllGardenPlants()
             navController.currentBackStackEntry?.savedStateHandle?.set("refresh_reminders", false)
         }
     }
+
 
     Box(modifier = Modifier.fillMaxSize().padding(top = 32.dp)) {
         val gardenPlants = plantListGarden.plantGarden

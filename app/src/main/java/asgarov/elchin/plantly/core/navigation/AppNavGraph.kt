@@ -25,7 +25,7 @@ import asgarov.elchin.plantly.feature_profile.presentation.ProfileScreen
 import asgarov.elchin.plantly.feature_reminder.presentation.EditReminderScreen
 import asgarov.elchin.plantly.feature_reminder.presentation.ReminderScreen
 import asgarov.elchin.plantly.feature_reminder.presentation.SetReminderScreen
-import asgarov.elchin.plantly.feature_scan.ScanScreen
+import asgarov.elchin.plantly.feature_scan.presentation.ScanScreen
 import asgarov.elchin.plantly.onboarding.presentation.OnBoardingViewModel
 import asgarov.elchin.plantly.onboarding.presentation.OnboardingScreen
 
@@ -86,7 +86,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 ExploreScreen(navController)
             }
             composable(NavigationRoute.ScanRoute.route) {
-                ScanScreen()
+                ScanScreen(navController)
             }
             composable(NavigationRoute.MyGarden.route) {
                 MyGardenScreen(navController)

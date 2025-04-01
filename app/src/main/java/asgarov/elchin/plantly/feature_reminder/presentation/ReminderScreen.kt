@@ -16,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.PlantDetailViewModel
-import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable

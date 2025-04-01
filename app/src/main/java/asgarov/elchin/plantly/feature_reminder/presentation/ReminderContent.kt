@@ -31,7 +31,6 @@ import asgarov.elchin.plantly.feature_reminder.domain.model.Reminder
 import asgarov.elchin.plantly.feature_reminder.domain.model.ReminderType
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
-import coil3.compose.rememberAsyncImagePainter
 import java.time.format.DateTimeFormatter
 
 

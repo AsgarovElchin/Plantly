@@ -43,8 +43,4 @@ object ExploreModule {
         return PlantCareRepositoryImpl(api)
     }
 
-
-
-
-
 }

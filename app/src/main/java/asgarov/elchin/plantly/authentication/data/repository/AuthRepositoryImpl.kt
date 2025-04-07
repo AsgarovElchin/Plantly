@@ -1,8 +1,11 @@
 package asgarov.elchin.plantly.authentication.data.repository
 
+import asgarov.elchin.plantly.authentication.data.mapper.toTokenPair
 import asgarov.elchin.plantly.authentication.data.mapper.toUser
 import asgarov.elchin.plantly.authentication.data.remote.AuthApi
+import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.RegisterRequestDto
+import asgarov.elchin.plantly.authentication.domain.model.TokenPair
 import asgarov.elchin.plantly.authentication.domain.model.User
 import asgarov.elchin.plantly.authentication.domain.repository.AuthRepository
 import asgarov.elchin.plantly.core.utils.Resource
@@ -22,6 +25,21 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Resource.Success(response.body()!!.data!!.toUser()))
             } else {
                 emit(Resource.Error(response.body()?.message ?: "Registration failed"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
+
+    override fun login(email: String, password: String): Flow<Resource<TokenPair>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = api.login(LoginRequestDto(email, password))
+            if (response.isSuccessful && response.body()?.success == true) {
+                val data = response.body()!!.data!!.toTokenPair()
+                emit(Resource.Success(data))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Login failed"))
             }
         } catch (e: Exception) {
             emit(Resource.Error("Error: ${e.localizedMessage}"))

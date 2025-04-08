@@ -62,4 +62,19 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Error("Error: ${e.localizedMessage}"))
         }
     }
+
+    override fun logout(accessToken: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val token = "Bearer $accessToken"
+            val response = api.logout(token)
+            if (response.isSuccessful && response.body()?.success == true) {
+                emit(Resource.Success(Unit))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Logout failed"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
 }

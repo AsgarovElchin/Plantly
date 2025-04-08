@@ -6,6 +6,7 @@ import asgarov.elchin.plantly.authentication.data.mapper.toUser
 import asgarov.elchin.plantly.authentication.data.remote.AuthApi
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.RegisterRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.ResetPasswordRequestDto
 import asgarov.elchin.plantly.authentication.domain.model.Token
 import asgarov.elchin.plantly.authentication.domain.model.TokenPair
 import asgarov.elchin.plantly.authentication.domain.model.User
@@ -86,6 +87,21 @@ class AuthRepositoryImpl @Inject constructor(
                 emit(Resource.Success(Unit))
             } else {
                 emit(Resource.Error(response.body()?.message ?: "Failed to send OTP"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
+
+    override fun resetPassword(email: String, otp: String, newPassword: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val dto = ResetPasswordRequestDto(email, otp, newPassword)
+            val response = api.resetPassword(dto)
+            if (response.isSuccessful && response.body()?.success == true) {
+                emit(Resource.Success(Unit))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Failed to reset password"))
             }
         } catch (e: Exception) {
             emit(Resource.Error("Error: ${e.localizedMessage}"))

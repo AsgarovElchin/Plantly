@@ -33,6 +33,8 @@ class AuthViewModel @Inject constructor(
     private val _forgotPasswordState = MutableStateFlow(ForgotPasswordState())
     val forgotPasswordState: StateFlow<ForgotPasswordState> = _forgotPasswordState
 
+    private val _resetPasswordState = MutableStateFlow(ResetPasswordState())
+    val resetPasswordState: StateFlow<ResetPasswordState> = _resetPasswordState
 
     fun register(email: String, password: String) {
         repository.register(email, password).onEach { result ->
@@ -83,6 +85,18 @@ class AuthViewModel @Inject constructor(
                 is Resource.Loading -> _forgotPasswordState.value = ForgotPasswordState(isLoading = true)
                 is Resource.Success -> _forgotPasswordState.value = ForgotPasswordState(otpSent = true)
                 is Resource.Error -> _forgotPasswordState.value = ForgotPasswordState(error = result.message ?: "Unknown error")
+            }
+        }.launchIn(viewModelScope)
+    }
+
+
+
+    fun resetPassword(email: String, otp: String, newPassword: String) {
+        repository.resetPassword(email, otp, newPassword).onEach { result ->
+            when (result) {
+                is Resource.Loading -> _resetPasswordState.value = ResetPasswordState(isLoading = true)
+                is Resource.Success -> _resetPasswordState.value = ResetPasswordState(passwordReset = true)
+                is Resource.Error -> _resetPasswordState.value = ResetPasswordState(error = result.message ?: "Unknown error")
             }
         }.launchIn(viewModelScope)
     }

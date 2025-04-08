@@ -4,6 +4,7 @@ import asgarov.elchin.plantly.authentication.data.remote.dto.ApiResponseDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginResponseDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.RegisterRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.ResetPasswordRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.UserDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -27,6 +28,9 @@ interface AuthApi {
 
     @POST("forgot-password")
     suspend fun forgotPassword(@Query("email") email: String): Response<ApiResponseDto<Unit>>
+
+    @POST("reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequestDto): Response<ApiResponseDto<Unit>>
 
 
 

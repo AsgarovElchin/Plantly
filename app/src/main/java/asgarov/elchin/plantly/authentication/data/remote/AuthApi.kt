@@ -8,6 +8,7 @@ import asgarov.elchin.plantly.authentication.data.remote.dto.UserDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApi {
 
@@ -16,6 +17,10 @@ interface AuthApi {
 
     @POST("login")
     suspend fun login(@Body request: LoginRequestDto): Response<ApiResponseDto<LoginResponseDto>>
+
+    @POST("refresh")
+    suspend fun refreshToken(@Query("refreshToken") refreshToken: String): Response<ApiResponseDto<String>>
+
 
 
 }

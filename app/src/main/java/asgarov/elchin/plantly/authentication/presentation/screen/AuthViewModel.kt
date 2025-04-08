@@ -24,6 +24,10 @@ class AuthViewModel @Inject constructor(
     private val _loginState = MutableStateFlow(LoginState())
     val loginState: StateFlow<LoginState> = _loginState
 
+    private val _refreshState = MutableStateFlow(RefreshTokenState())
+    val refreshState: StateFlow<RefreshTokenState> = _refreshState
+
+
     fun register(email: String, password: String) {
         repository.register(email, password).onEach { result ->
             when (result) {
@@ -45,5 +49,14 @@ class AuthViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    fun refreshToken(refreshToken: String) {
+        repository.refreshToken(refreshToken).onEach { result ->
+            when (result) {
+                is Resource.Loading -> _refreshState.value = RefreshTokenState(isLoading = true)
+                is Resource.Success -> _refreshState.value = RefreshTokenState(token = result.data)
+                is Resource.Error -> _refreshState.value = RefreshTokenState(error = result.message ?: "Unknown error")
+            }
+        }.launchIn(viewModelScope)
+    }
 
 }

@@ -77,4 +77,18 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Error("Error: ${e.localizedMessage}"))
         }
     }
+
+    override fun forgotPassword(email: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = api.forgotPassword(email)
+            if (response.isSuccessful && response.body()?.success == true) {
+                emit(Resource.Success(Unit))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Failed to send OTP"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
 }

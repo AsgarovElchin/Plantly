@@ -30,6 +30,9 @@ class AuthViewModel @Inject constructor(
     private val _logoutState = MutableStateFlow(LogoutState())
     val logoutState: StateFlow<LogoutState> = _logoutState
 
+    private val _forgotPasswordState = MutableStateFlow(ForgotPasswordState())
+    val forgotPasswordState: StateFlow<ForgotPasswordState> = _forgotPasswordState
+
 
     fun register(email: String, password: String) {
         repository.register(email, password).onEach { result ->
@@ -69,6 +72,17 @@ class AuthViewModel @Inject constructor(
                 is Resource.Loading -> _logoutState.value = LogoutState(isLoading = true)
                 is Resource.Success -> _logoutState.value = LogoutState(isLoggedOut = true)
                 is Resource.Error -> _logoutState.value = LogoutState(error = result.message ?: "Unknown error")
+            }
+        }.launchIn(viewModelScope)
+    }
+
+
+    fun forgotPassword(email: String) {
+        repository.forgotPassword(email).onEach { result ->
+            when (result) {
+                is Resource.Loading -> _forgotPasswordState.value = ForgotPasswordState(isLoading = true)
+                is Resource.Success -> _forgotPasswordState.value = ForgotPasswordState(otpSent = true)
+                is Resource.Error -> _forgotPasswordState.value = ForgotPasswordState(error = result.message ?: "Unknown error")
             }
         }.launchIn(viewModelScope)
     }

@@ -25,6 +25,10 @@ interface AuthApi {
     @POST("auth/logout")
     suspend fun logout(@Header("Authorization") accessToken: String): Response<ApiResponseDto<Unit>>
 
+    @POST("forgot-password")
+    suspend fun forgotPassword(@Query("email") email: String): Response<ApiResponseDto<Unit>>
+
+
 
 
 }

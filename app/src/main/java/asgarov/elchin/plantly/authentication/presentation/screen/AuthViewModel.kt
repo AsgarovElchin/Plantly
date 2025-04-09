@@ -36,6 +36,13 @@ class AuthViewModel @Inject constructor(
     private val _resetPasswordState = MutableStateFlow(ResetPasswordState())
     val resetPasswordState: StateFlow<ResetPasswordState> = _resetPasswordState
 
+    private val _otpSendState = MutableStateFlow(OtpState())
+    val otpSendState: StateFlow<OtpState> = _otpSendState
+
+    private val _otpVerifyState = MutableStateFlow(OtpState())
+    val otpVerifyState: StateFlow<OtpState> = _otpVerifyState
+
+
     fun register(email: String, password: String) {
         repository.register(email, password).onEach { result ->
             when (result) {
@@ -97,6 +104,26 @@ class AuthViewModel @Inject constructor(
                 is Resource.Loading -> _resetPasswordState.value = ResetPasswordState(isLoading = true)
                 is Resource.Success -> _resetPasswordState.value = ResetPasswordState(passwordReset = true)
                 is Resource.Error -> _resetPasswordState.value = ResetPasswordState(error = result.message ?: "Unknown error")
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun sendOtp(email: String) {
+        repository.sendOtp(email).onEach { result ->
+            _otpSendState.value = when (result) {
+                is Resource.Loading -> OtpState(isLoading = true)
+                is Resource.Success -> OtpState(isSuccess = true)
+                is Resource.Error -> OtpState(error = result.message ?: "Error sending OTP")
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun verifyOtp(email: String, otp: String) {
+        repository.verifyOtp(email, otp).onEach { result ->
+            _otpVerifyState.value = when (result) {
+                is Resource.Loading -> OtpState(isLoading = true)
+                is Resource.Success -> OtpState(isSuccess = true)
+                is Resource.Error -> OtpState(error = result.message ?: "OTP verification failed")
             }
         }.launchIn(viewModelScope)
     }

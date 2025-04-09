@@ -5,6 +5,8 @@ import asgarov.elchin.plantly.authentication.data.mapper.toTokenPair
 import asgarov.elchin.plantly.authentication.data.mapper.toUser
 import asgarov.elchin.plantly.authentication.data.remote.AuthApi
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpVerifyDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.RegisterRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.ResetPasswordRequestDto
 import asgarov.elchin.plantly.authentication.domain.model.Token
@@ -107,4 +109,33 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Error("Error: ${e.localizedMessage}"))
         }
     }
+
+    override fun sendOtp(email: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = api.sendOtp(OtpRequestDto(email))
+            if (response.isSuccessful && response.body()?.success == true) {
+                emit(Resource.Success(Unit))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Failed to send OTP"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
+
+    override fun verifyOtp(email: String, otp: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = api.verifyOtp(OtpVerifyDto(email, otp))
+            if (response.isSuccessful && response.body()?.success == true) {
+                emit(Resource.Success(Unit))
+            } else {
+                emit(Resource.Error(response.body()?.message ?: "Invalid or expired OTP"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error: ${e.localizedMessage}"))
+        }
+    }
+
 }

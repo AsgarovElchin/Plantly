@@ -3,6 +3,8 @@ package asgarov.elchin.plantly.authentication.data.remote
 import asgarov.elchin.plantly.authentication.data.remote.dto.ApiResponseDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginResponseDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpVerifyDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.RegisterRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.ResetPasswordRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.UserDto
@@ -31,6 +33,14 @@ interface AuthApi {
 
     @POST("reset-password")
     suspend fun resetPassword(@Body request: ResetPasswordRequestDto): Response<ApiResponseDto<Unit>>
+
+    @POST("api/otp/send")
+    suspend fun sendOtp(@Body dto: OtpRequestDto): Response<ApiResponseDto<Unit>>
+
+    @POST("api/otp/verify")
+    suspend fun verifyOtp(@Body dto: OtpVerifyDto): Response<ApiResponseDto<Unit>>
+
+
 
 
 

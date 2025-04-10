@@ -34,88 +34,104 @@ import asgarov.elchin.plantly.authentication.presentation.component.AuthTitle
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
-fun RegisterContent(navController: NavController){
+fun RegisterContent(
+    email: String,
+    password: String,
+    confirmPassword: String,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onRegisterClick: () -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onNavigateToLogin: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize().padding(vertical = 70.dp)) {
-        AuthTitle(title = "Hello! Register to get started")
+        AuthTitle(title = "Set up your password")
         Spacer(modifier = Modifier.height(30.dp))
-        var userName by remember { mutableStateOf("") }
-        AuthTextField(
-            label = "Username",
-            value = userName,
-            onValueChange = { userName = it},
-            isPassword = false
+
+        Text(
+            text = "Almost there! Email $email has been verified. Now choose a secure password to complete registration.",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        var email by remember { mutableStateOf("") }
-        AuthTextField(
-            label = "Email",
-            value = email,
-            onValueChange = { email = it},
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        var password by remember { mutableStateOf("") }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
         AuthTextField(
             label = "Password",
             value = password,
-            onValueChange = { password = it},
+            onValueChange = onPasswordChange,
             isPassword = true
         )
+
         Spacer(modifier = Modifier.height(10.dp))
-        var confirmPassword by remember { mutableStateOf("") }
+
         AuthTextField(
             label = "Confirm Password",
             value = confirmPassword,
-            onValueChange = { confirmPassword = it},
+            onValueChange = onConfirmPasswordChange,
             isPassword = true
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Forgot password?", modifier = Modifier.fillMaxWidth().padding(end = 24.dp).clickable {
-            navController.navigate(NavigationRoute.ForgotPasswordRoute.route)
-        }, textAlign = TextAlign.End, fontSize = 14.sp, color = Color.Gray)
-        Spacer(modifier = Modifier.height(20.dp))
-        AuthButton(text = "Register",
-            textColor = Color.White,
-            buttonColor = Color.Black,
-            onClick = {})
 
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically){
-            HorizontalDivider(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(1.dp),
-                color = Color.LightGray
-            )
+        if (!errorMessage.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "Or Register with",
-                modifier = Modifier.padding(horizontal = 8.dp),
-                color = Color.Gray,
-                fontSize = 14.sp
-            )
-            HorizontalDivider(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(1.dp),
-                color = Color.LightGray
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        AuthButton(
+            text = if (isLoading) "Registering..." else "Register",
+            textColor = Color.White,
+            buttonColor = Color.Black,
+            onClick = onRegisterClick
+        )
+
         Spacer(modifier = Modifier.height(10.dp))
-        AuthButton(text = "Register with Google",
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+            Text(
+                text = " Or register with ",
+                color = Color.Gray,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        AuthButton(
+            text = "Register with Google",
             textColor = Color.Black,
             buttonColor = Color.White,
-            onClick = {},
+            onClick = { /* TODO: Implement Google Login */ },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.google_icon),
                     contentDescription = "Google Icon",
                     tint = Color.Unspecified
                 )
-            })
-
+            }
+        )
 
         Spacer(modifier = Modifier.weight(1f))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,12 +151,9 @@ fun RegisterContent(navController: NavController){
                     fontSize = 14.sp,
                     color = Color(0xFF00ACC1),
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable {
-                        navController.navigate(NavigationRoute.LoginRoute.route)
-                    }
+                    modifier = Modifier.clickable { onNavigateToLogin() }
                 )
             }
         }
     }
-
 }

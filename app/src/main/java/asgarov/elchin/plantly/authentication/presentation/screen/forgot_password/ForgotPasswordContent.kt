@@ -33,31 +33,63 @@ import asgarov.elchin.plantly.authentication.presentation.component.AuthTitle
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
-fun ForgotPasswordContent(navController: NavController){
-    Column(modifier = Modifier.fillMaxSize().padding(vertical = 70.dp)) {
+fun ForgotPasswordContent(
+    email: String,
+    onEmailChange: (String) -> Unit,
+    onSendCodeClick: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 70.dp)
+    ) {
         AuthTitle(title = "Forgot Password?")
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Don't worry! It occurs. Please enter the email address linked with your account.", overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Start, fontSize = 14.sp, color = Color.Gray, modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp))
+
+        Text(
+            text = "Don't worry! It occurs. Please enter the email address linked with your account.",
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Start,
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        )
+
         Spacer(modifier = Modifier.height(30.dp))
-        var email by remember { mutableStateOf("") }
+
         AuthTextField(
             label = "Enter your email",
             value = email,
-            onValueChange = { email = it},
+            onValueChange = onEmailChange,
             isPassword = false
         )
 
+        if (!errorMessage.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(50.dp))
 
-        AuthButton(text = "Send Code",
+        AuthButton(
+            text = if (isLoading) "Sending..." else "Send Code",
             textColor = Color.White,
             buttonColor = Color.Black,
-            onClick = {
-                navController.navigate(NavigationRoute.OTPVerificationRoute.route)
-            })
-
+            onClick = onSendCodeClick
+        )
 
         Spacer(modifier = Modifier.weight(1f))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -77,12 +109,9 @@ fun ForgotPasswordContent(navController: NavController){
                     fontSize = 14.sp,
                     color = Color(0xFF00ACC1),
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable {
-                        navController.navigate(NavigationRoute.LoginRoute.route)
-                    }
+                    modifier = Modifier.clickable { onNavigateToLogin() }
                 )
             }
         }
     }
-
 }

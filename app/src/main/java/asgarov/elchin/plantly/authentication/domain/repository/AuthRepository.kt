@@ -1,5 +1,7 @@
 package asgarov.elchin.plantly.authentication.domain.repository
 
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpRequestDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.OtpVerifyDto
 import asgarov.elchin.plantly.authentication.domain.model.Token
 import asgarov.elchin.plantly.authentication.domain.model.TokenPair
 import asgarov.elchin.plantly.authentication.domain.model.User
@@ -15,14 +17,9 @@ interface AuthRepository {
 
     fun logout(accessToken: String): Flow<Resource<Unit>>
 
-    fun forgotPassword(email: String): Flow<Resource<Unit>>
+    fun resetPassword(email: String, newPassword: String): Flow<Resource<Unit>>
 
-    fun resetPassword(email: String, otp: String, newPassword: String): Flow<Resource<Unit>>
+    fun sendOtp(dto: OtpRequestDto): Flow<Resource<Unit>>
 
-    fun sendOtp(email: String): Flow<Resource<Unit>>
-
-    fun verifyOtp(email: String, otp: String): Flow<Resource<Unit>>
-
-
-
+    fun verifyOtp(dto: OtpVerifyDto): Flow<Resource<Unit>>
 }

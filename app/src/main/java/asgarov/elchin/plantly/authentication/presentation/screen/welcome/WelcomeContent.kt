@@ -38,7 +38,7 @@ fun WelcomeContent(navController: NavController){
 
         AuthButton(
             text = "Register",
-            onClick = { navController.navigate(NavigationRoute.RegisterRoute.route) },
+            onClick = { navController.navigate(NavigationRoute.RegisterEmailRoute.route) },
             textColor = Color.Black,
             buttonColor = Color.White
 

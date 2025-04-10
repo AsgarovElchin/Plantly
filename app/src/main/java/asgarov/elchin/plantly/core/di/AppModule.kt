@@ -1,5 +1,6 @@
 package asgarov.elchin.plantly.core.di
 
+import asgarov.elchin.plantly.authentication.data.remote.util.MoshiUnitAdapter
 import asgarov.elchin.plantly.core.utils.Constants
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountAdapter
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountData
@@ -38,15 +39,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        val pruningCountDataAdapter = Moshi.Builder()
-            .build()
-            .adapter(PruningCountData::class.java)
+        val baseMoshi = Moshi.Builder().build()
+        val pruningCountDataAdapter = baseMoshi.adapter(PruningCountData::class.java)
 
         return Moshi.Builder()
+            .add(Unit::class.java, MoshiUnitAdapter)
             .add(PruningCountAdapter(pruningCountDataAdapter))
             .build()
     }
-
 
     @Provides
     @Singleton

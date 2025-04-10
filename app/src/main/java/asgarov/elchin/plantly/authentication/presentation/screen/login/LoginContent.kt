@@ -34,39 +34,83 @@ import asgarov.elchin.plantly.authentication.presentation.component.AuthTitle
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
-fun LoginContent(navController: NavController){
-
-    Column(modifier = Modifier.fillMaxSize().padding(vertical = 70.dp)) {
+fun LoginContent(
+    email: String,
+    password: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit,
+    onNavigateToRegister: () -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 70.dp)
+    ) {
         AuthTitle(title = "Welcome back! Glad to see you, Again!")
+
         Spacer(modifier = Modifier.height(30.dp))
-        var email by remember { mutableStateOf("") }
+
         AuthTextField(
             label = "Enter your email",
             value = email,
-            onValueChange = { email = it},
+            onValueChange = onEmailChange,
             isPassword = false
         )
+
         Spacer(modifier = Modifier.height(30.dp))
-        var password by remember { mutableStateOf("") }
+
         AuthTextField(
             label = "Enter your password",
             value = password,
-            onValueChange = { password = it},
+            onValueChange = onPasswordChange,
             isPassword = true
         )
+
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Forgot password?", modifier = Modifier.fillMaxWidth().padding(end = 24.dp).clickable {
-            navController.navigate(NavigationRoute.ForgotPasswordRoute.route)
-        }, textAlign = TextAlign.End, fontSize = 14.sp, color = Color.Gray)
+
+        Text(
+            text = "Forgot password?",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 24.dp)
+                .clickable { onNavigateToForgotPassword() },
+            textAlign = TextAlign.End,
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+
         Spacer(modifier = Modifier.height(40.dp))
-        AuthButton(text = "Login",
+
+        AuthButton(
+            text = if (isLoading) "Logging in..." else "Login",
             textColor = Color.White,
             buttonColor = Color.Black,
-            onClick = {navController.navigate(NavigationRoute.ReminderRoute.route)})
+            onClick = onLoginClick
+        )
+
+        if (!errorMessage.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(50.dp))
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically){
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             HorizontalDivider(
                 modifier = Modifier
                     .weight(1f)
@@ -86,8 +130,11 @@ fun LoginContent(navController: NavController){
                 color = Color.LightGray
             )
         }
+
         Spacer(modifier = Modifier.height(50.dp))
-        AuthButton(text = "Sign in with Google",
+
+        AuthButton(
+            text = "Sign in with Google",
             textColor = Color.Black,
             buttonColor = Color.White,
             onClick = {},
@@ -97,10 +144,11 @@ fun LoginContent(navController: NavController){
                     contentDescription = "Google Icon",
                     tint = Color.Unspecified
                 )
-            })
-
+            }
+        )
 
         Spacer(modifier = Modifier.weight(1f))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -121,7 +169,7 @@ fun LoginContent(navController: NavController){
                     color = Color(0xFF00ACC1),
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.clickable {
-                        navController.navigate(NavigationRoute.RegisterRoute.route)
+                        onNavigateToRegister()
                     }
                 )
             }

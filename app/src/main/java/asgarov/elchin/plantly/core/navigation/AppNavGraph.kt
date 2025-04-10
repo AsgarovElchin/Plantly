@@ -16,6 +16,7 @@ import asgarov.elchin.plantly.authentication.presentation.screen.forgot_password
 import asgarov.elchin.plantly.authentication.presentation.screen.login.LoginScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.otp_verification.OTPVerificationScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.password_changed.PasswordChangedScreen
+import asgarov.elchin.plantly.authentication.presentation.screen.register.RegisterEmailScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.register.RegisterScreen
 import asgarov.elchin.plantly.authentication.presentation.screen.welcome.WelcomeScreen
 import asgarov.elchin.plantly.feature_explore.presentation.ExploreScreen
@@ -32,13 +33,10 @@ import asgarov.elchin.plantly.onboarding.presentation.OnboardingScreen
 @Composable
 fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     val viewModel: OnBoardingViewModel = hiltViewModel()
-
     val showOnboarding by viewModel.showOnboarding.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    if (isLoading) {
-        return
-    }
+    if (isLoading) return
 
     NavHost(
         modifier = modifier,
@@ -46,30 +44,54 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         startDestination = if (showOnboarding) "onboarding_graph" else "authentication_graph"
     ) {
 
-
-        navigation(startDestination = NavigationRoute.OnboardingRoute.route, route = "onboarding_graph") {
+        navigation(
+            startDestination = NavigationRoute.OnboardingRoute.route,
+            route = "onboarding_graph"
+        ) {
             composable(NavigationRoute.OnboardingRoute.route) {
                 OnboardingScreen(navController)
             }
         }
 
-        navigation(startDestination = NavigationRoute.WelcomeRoute.route, route = "authentication_graph") {
+        navigation(
+            startDestination = NavigationRoute.WelcomeRoute.route,
+            route = "authentication_graph"
+        ) {
             composable(NavigationRoute.WelcomeRoute.route) {
                 WelcomeScreen(navController)
             }
             composable(NavigationRoute.LoginRoute.route) {
                 LoginScreen(navController)
             }
-            composable(NavigationRoute.RegisterRoute.route) {
+            composable(
+                route = NavigationRoute.RegisterRoute.route,
+                arguments = listOf(
+                    navArgument("email") {
+                        type = NavType.StringType
+                        defaultValue = "" // Optional for Google login or future reuse
+                    }
+                )
+            ) {
                 RegisterScreen(navController)
             }
+
             composable(NavigationRoute.ForgotPasswordRoute.route) {
                 ForgotPasswordScreen(navController)
             }
-            composable(NavigationRoute.OTPVerificationRoute.route) {
+            composable(
+                route = NavigationRoute.OTPVerificationRoute.route,
+                arguments = listOf(
+                    navArgument("email") { type = NavType.StringType },
+                    navArgument("type") { type = NavType.StringType }
+                )
+            ) {
                 OTPVerificationScreen(navController)
             }
-            composable(NavigationRoute.CreateNewPassword.route) {
+
+            composable(
+                route = NavigationRoute.CreateNewPassword.route,
+                arguments = listOf(navArgument("email") { type = NavType.StringType })
+            ) {
                 CreateNewPasswordScreen(navController)
             }
             composable(NavigationRoute.PasswordChanged.route) {
@@ -77,8 +99,10 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             }
         }
 
-
-        navigation(startDestination = NavigationRoute.ReminderRoute.route, route = "main_graph") {
+        navigation(
+            startDestination = NavigationRoute.ReminderRoute.route,
+            route = "main_graph"
+        ) {
             composable(NavigationRoute.ReminderRoute.route) {
                 ReminderScreen(navController)
             }
@@ -94,23 +118,33 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             composable(NavigationRoute.ProfileRoute.route) {
                 ProfileScreen()
             }
-
             composable(
-                route = "plant_detail/{plantId}",
+                route = NavigationRoute.PlantDetailRoute.route,
                 arguments = listOf(navArgument("plantId") { type = NavType.IntType })
             ) {
-                PlantDetailScreen(navController = navController)
+                PlantDetailScreen(navController)
             }
-
-
-            composable(NavigationRoute.SetReminderRoute.route) {
+            composable(
+                route = NavigationRoute.SetReminderRoute.route,
+                arguments = listOf(
+                    navArgument("plantId") { type = NavType.LongType },
+                    navArgument("plantName") { type = NavType.StringType }
+                )
+            ) {
                 SetReminderScreen(navController)
             }
-            composable(NavigationRoute.EditReminderRoute.route) {
+            composable(
+                route = NavigationRoute.EditReminderRoute.route,
+                arguments = listOf(
+                    navArgument("reminderId") { type = NavType.LongType },
+                    navArgument("reminderType") { type = NavType.StringType }
+                )
+            ) {
                 EditReminderScreen(navController)
             }
+            composable(NavigationRoute.RegisterEmailRoute.route) {
+                RegisterEmailScreen(navController)
+            }
         }
-
-
     }
 }

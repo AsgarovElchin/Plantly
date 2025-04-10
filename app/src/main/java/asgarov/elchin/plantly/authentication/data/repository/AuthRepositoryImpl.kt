@@ -41,8 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val response = api.login(LoginRequestDto(email, password))
             if (response.isSuccessful && response.body()?.success == true) {
-                val data = response.body()!!.data!!.toTokenPair()
-                emit(Resource.Success(data))
+                emit(Resource.Success(response.body()!!.data!!.toTokenPair()))
             } else {
                 emit(Resource.Error(response.body()?.message ?: "Login failed"))
             }
@@ -56,8 +55,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val response = api.refreshToken(refreshToken)
             if (response.isSuccessful && response.body()?.success == true) {
-                val token = response.body()?.data!!.toToken()
-                emit(Resource.Success(token))
+                emit(Resource.Success(response.body()!!.data!!.toToken()))
             } else {
                 emit(Resource.Error(response.body()?.message ?: "Failed to refresh token"))
             }
@@ -69,8 +67,7 @@ class AuthRepositoryImpl @Inject constructor(
     override fun logout(accessToken: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            val token = "Bearer $accessToken"
-            val response = api.logout(token)
+            val response = api.logout("Bearer $accessToken")
             if (response.isSuccessful && response.body()?.success == true) {
                 emit(Resource.Success(Unit))
             } else {
@@ -81,24 +78,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun forgotPassword(email: String): Flow<Resource<Unit>> = flow {
+    override fun resetPassword(email: String, newPassword: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            val response = api.forgotPassword(email)
-            if (response.isSuccessful && response.body()?.success == true) {
-                emit(Resource.Success(Unit))
-            } else {
-                emit(Resource.Error(response.body()?.message ?: "Failed to send OTP"))
-            }
-        } catch (e: Exception) {
-            emit(Resource.Error("Error: ${e.localizedMessage}"))
-        }
-    }
-
-    override fun resetPassword(email: String, otp: String, newPassword: String): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading())
-        try {
-            val dto = ResetPasswordRequestDto(email, otp, newPassword)
+            val dto = ResetPasswordRequestDto(email = email, otp = "", newPassword = newPassword)
             val response = api.resetPassword(dto)
             if (response.isSuccessful && response.body()?.success == true) {
                 emit(Resource.Success(Unit))
@@ -110,10 +93,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun sendOtp(email: String): Flow<Resource<Unit>> = flow {
+    override fun sendOtp(dto: OtpRequestDto): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            val response = api.sendOtp(OtpRequestDto(email))
+            val response = api.sendOtp(dto)
             if (response.isSuccessful && response.body()?.success == true) {
                 emit(Resource.Success(Unit))
             } else {
@@ -124,10 +107,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun verifyOtp(email: String, otp: String): Flow<Resource<Unit>> = flow {
+    override fun verifyOtp(dto: OtpVerifyDto): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            val response = api.verifyOtp(OtpVerifyDto(email, otp))
+            val response = api.verifyOtp(dto)
             if (response.isSuccessful && response.body()?.success == true) {
                 emit(Resource.Success(Unit))
             } else {
@@ -137,5 +120,4 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Error("Error: ${e.localizedMessage}"))
         }
     }
-
 }

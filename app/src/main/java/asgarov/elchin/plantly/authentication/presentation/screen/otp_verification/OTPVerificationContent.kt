@@ -31,26 +31,59 @@ import asgarov.elchin.plantly.authentication.presentation.component.OtpInputRow
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 
 @Composable
-fun OTPVerificationContent(navController: NavController){
+fun OTPVerificationContent(
+    otp: String,
+    onOtpChange: (String) -> Unit,
+    onVerifyClick: () -> Unit,
+    onResendClick: () -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?
+) {
     Column(modifier = Modifier.fillMaxSize().padding(vertical = 70.dp)) {
         AuthTitle(title = "OTP Verification")
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Enter the verification code we just sent on your email address.", overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Start, fontSize = 14.sp, color = Color.Gray, modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp))
+
+        Text(
+            text = "Enter the verification code we just sent on your email address.",
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Start,
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        )
+
         Spacer(modifier = Modifier.height(30.dp))
+
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            OtpInputRow()
+            OtpInputRow(
+                code = otp,
+                onCodeChange = onOtpChange
+            )
         }
+
+        if (!errorMessage.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(50.dp))
 
-        AuthButton(text = "Verify",
+        AuthButton(
+            text = if (isLoading) "Verifying..." else "Verify",
             textColor = Color.White,
             buttonColor = Color.Black,
-            onClick = {
-                navController.navigate(NavigationRoute.CreateNewPassword.route)
-            })
-
+            onClick = onVerifyClick
+        )
 
         Spacer(modifier = Modifier.weight(1f))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,7 +94,7 @@ fun OTPVerificationContent(navController: NavController){
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = "Didn't received code? ",
+                    text = "Didn't receive code? ",
                     fontSize = 14.sp,
                     color = Color.Black
                 )
@@ -71,7 +104,7 @@ fun OTPVerificationContent(navController: NavController){
                     color = Color(0xFF00ACC1),
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.clickable {
-                        navController.navigate(NavigationRoute.LoginRoute.route)
+                        onResendClick()
                     }
                 )
             }

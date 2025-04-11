@@ -38,7 +38,8 @@ class MainActivity : ComponentActivity() {
                     NavigationRoute.ForgotPasswordRoute.route,
                     NavigationRoute.OTPVerificationRoute.route,
                     NavigationRoute.CreateNewPassword.route,
-                    NavigationRoute.PasswordChanged.route
+                    NavigationRoute.PasswordChanged.route,
+                    NavigationRoute.RegisterEmailRoute.route
                 )
 
                 val showBottomBar = backStackEntry.value?.destination?.route?.let { route ->

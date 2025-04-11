@@ -68,7 +68,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 arguments = listOf(
                     navArgument("email") {
                         type = NavType.StringType
-                        defaultValue = "" // Optional for Google login or future reuse
+                        defaultValue = ""
                     }
                 )
             ) {

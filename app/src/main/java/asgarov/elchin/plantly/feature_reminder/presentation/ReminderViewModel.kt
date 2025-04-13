@@ -37,10 +37,9 @@ class ReminderViewModel @Inject constructor(
 
 
     init {
-        val plantId: Long = savedStateHandle.get<String>("plantId")?.toLongOrNull() ?: 0L
+        val plantId: Long = savedStateHandle.get<Long>("plantId") ?: 0L
         val plantName: String = savedStateHandle.get<String>("plantName") ?: ""
 
-        Log.d("ReminderViewModel", "plantId = $plantId, plantName = '$plantName'")
 
         _reminderState.value = ReminderState(
             reminder = Reminder(
@@ -84,21 +83,24 @@ class ReminderViewModel @Inject constructor(
 
 
 
-     fun getAllReminders() {
+    fun getAllReminders() {
         reminderRepository.getAllReminders().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    _reminderListState.value = ReminderListState(reminders = result.data)
+                                       _reminderListState.value = ReminderListState(reminders = result.data)
                 }
+
                 is Resource.Error -> {
                     _reminderListState.value = ReminderListState(error = result.message ?: "Error updating reminder")
                 }
+
                 is Resource.Loading -> {
                     _reminderListState.value = ReminderListState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)
     }
+
 
 
     fun deleteReminderByPlant(id: Long) {

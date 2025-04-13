@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GardenPlantViewModel @Inject constructor(
     private val gardenPlantRepository: GardenPlantRepository
-):ViewModel() {
+) : ViewModel() {
 
     private val _plantListGardenState = mutableStateOf(PlantListGardenState())
     val plantListGardenState: State<PlantListGardenState> = _plantListGardenState
@@ -24,17 +24,16 @@ class GardenPlantViewModel @Inject constructor(
         getAllGardenPlants()
     }
 
-     fun getAllGardenPlants(){
-        gardenPlantRepository.getAllGardenPlants().onEach {result->
-            when(result){
-                is Resource.Success->{
+    fun getAllGardenPlants() {
+        gardenPlantRepository.getAllGardenPlants().onEach { result ->
+            when (result) {
+                is Resource.Success -> {
                     _plantListGardenState.value = PlantListGardenState(plantGarden = result.data)
-                    Log.d("TAG", "getPlantDetailsById: ${result.data}")
                 }
-                is Resource.Error->{
-                    _plantListGardenState.value = PlantListGardenState(error = result.message?: "An unexpected error occurred")
+                is Resource.Error -> {
+                    _plantListGardenState.value = PlantListGardenState(error = result.message ?: "An unexpected error occurred")
                 }
-                is Resource.Loading->{
+                is Resource.Loading -> {
                     _plantListGardenState.value = PlantListGardenState(isLoading = true)
                 }
             }
@@ -53,7 +52,6 @@ class GardenPlantViewModel @Inject constructor(
                         plantGarden = updatedList,
                         isLoading = false
                     )
-
                 }
                 is Resource.Error -> {
                     _plantListGardenState.value = _plantListGardenState.value.copy(
@@ -67,7 +65,4 @@ class GardenPlantViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-
-
-
 }

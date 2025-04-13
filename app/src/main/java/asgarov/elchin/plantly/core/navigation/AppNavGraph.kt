@@ -1,8 +1,6 @@
 package asgarov.elchin.plantly.core.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -31,17 +29,15 @@ import asgarov.elchin.plantly.onboarding.presentation.OnBoardingViewModel
 import asgarov.elchin.plantly.onboarding.presentation.OnboardingScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
-    val viewModel: OnBoardingViewModel = hiltViewModel()
-    val showOnboarding by viewModel.showOnboarding.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-    if (isLoading) return
-
+fun AppNavGraph(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    startDestination: String
+) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = if (showOnboarding) "onboarding_graph" else "authentication_graph"
+        startDestination = startDestination
     ) {
 
         navigation(
@@ -49,6 +45,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             route = "onboarding_graph"
         ) {
             composable(NavigationRoute.OnboardingRoute.route) {
+                val viewModel: OnBoardingViewModel = hiltViewModel()
                 OnboardingScreen(navController)
             }
         }
@@ -74,7 +71,6 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             ) {
                 RegisterScreen(navController)
             }
-
             composable(NavigationRoute.ForgotPasswordRoute.route) {
                 ForgotPasswordScreen(navController)
             }
@@ -87,7 +83,6 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             ) {
                 OTPVerificationScreen(navController)
             }
-
             composable(
                 route = NavigationRoute.CreateNewPassword.route,
                 arguments = listOf(navArgument("email") { type = NavType.StringType })
@@ -116,7 +111,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
                 MyGardenScreen(navController)
             }
             composable(NavigationRoute.ProfileRoute.route) {
-                ProfileScreen()
+                ProfileScreen(navController)
             }
             composable(
                 route = NavigationRoute.PlantDetailRoute.route,

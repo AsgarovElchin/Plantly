@@ -13,7 +13,7 @@ interface AuthRepository {
 
     fun login(email: String, password: String): Flow<Resource<TokenPair>>
 
-    fun refreshToken(refreshToken: String): Flow<Resource<Token>>
+    fun refreshToken(refreshToken: String): Flow<Resource<String>>
 
     fun logout(accessToken: String): Flow<Resource<Unit>>
 

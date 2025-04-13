@@ -39,7 +39,4 @@ interface PlantsDataApi {
 
 
 
-
-
-
 }

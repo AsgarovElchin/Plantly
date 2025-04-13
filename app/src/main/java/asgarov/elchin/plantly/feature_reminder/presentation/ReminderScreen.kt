@@ -1,5 +1,7 @@
 package asgarov.elchin.plantly.feature_reminder.presentation
 
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import asgarov.elchin.plantly.core.navigation.NavigationRoute
 import asgarov.elchin.plantly.feature_explore.presentation.screen.plant_detail.PlantDetailViewModel
-
 
 @Composable
 fun ReminderScreen(
@@ -64,7 +65,7 @@ fun ReminderScreen(
                 )
             }
 
-            state.reminders != null -> {
+            state.reminders != null && state.reminders.isNotEmpty() -> {
                 ReminderContent(
                     reminders = state.reminders,
                     onPlantClick = { reminderId, reminderType ->
@@ -81,10 +82,13 @@ fun ReminderScreen(
                 )
             }
 
+            state.reminders != null && state.reminders.isEmpty() -> {
+                EmptyRemindersState()
+            }
+
             else -> {
                 Text(
-                    text = "No reminders found.",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = "No data available.",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -92,4 +96,5 @@ fun ReminderScreen(
         }
     }
 }
+
 

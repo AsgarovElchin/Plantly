@@ -18,7 +18,6 @@ class PlantPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Plant> {
         val page = params.key ?: 1
-        Log.d("PlantPagingSource", "Loading page: $page")
 
         return try {
             val response = api.getAllPlants(

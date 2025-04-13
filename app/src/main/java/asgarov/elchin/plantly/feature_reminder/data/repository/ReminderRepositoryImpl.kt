@@ -1,7 +1,6 @@
 package asgarov.elchin.plantly.feature_reminder.data.repository
 
 
-
 import asgarov.elchin.plantly.core.utils.Resource
 import asgarov.elchin.plantly.feature_reminder.data.mapper.toReminder
 import asgarov.elchin.plantly.feature_reminder.data.mapper.toReminderDto
@@ -23,9 +22,14 @@ class ReminderRepositoryImpl @Inject constructor(
 
         try {
             val response = reminderApi.createReminder(reminder.toReminderDto())
+
             if (response.isSuccessful) {
-                response.body()?.let { emit(Resource.Success(it.toReminder())) }
-                    ?: emit(Resource.Error("Failed to create reminder"))
+                val body = response.body()
+                if (body?.success == true && body.data != null) {
+                    emit(Resource.Success(body.data.toReminder()))
+                } else {
+                    emit(Resource.Error(body?.message ?: "Failed to create reminder"))
+                }
             } else {
                 emit(Resource.Error("Error creating reminder: ${response.message()}"))
             }
@@ -41,9 +45,14 @@ class ReminderRepositoryImpl @Inject constructor(
 
         try {
             val response = reminderApi.updateReminder(id, reminder.toReminderDto())
+
             if (response.isSuccessful) {
-                response.body()?.let { emit(Resource.Success(it.toReminder())) }
-                    ?: emit(Resource.Error("Failed to update reminder"))
+                val body = response.body()
+                if (body?.success == true && body.data != null) {
+                    emit(Resource.Success(body.data.toReminder()))
+                } else {
+                    emit(Resource.Error(body?.message ?: "Failed to update reminder"))
+                }
             } else {
                 emit(Resource.Error("Error updating reminder: ${response.message()}"))
             }
@@ -59,17 +68,21 @@ class ReminderRepositoryImpl @Inject constructor(
 
         try {
             val response = reminderApi.getAllReminders()
-            if (response.isSuccessful) {
-                response.body()?.let { reminderDtos ->
-                    emit(Resource.Success(reminderDtos.map { it.toReminder() }))
-                } ?: emit(Resource.Error("No reminders found"))
+
+
+            val body = response.body()
+
+            if (response.isSuccessful && body?.data != null) {
+                emit(Resource.Success(body.data.map { it.toReminder() }))
             } else {
-                emit(Resource.Error("Error fetching reminders: ${response.message()}"))
+                emit(Resource.Error(body?.message ?: "Empty response body"))
             }
         } catch (e: HttpException) {
-            emit(Resource.Error("Server error: ${e.localizedMessage}"))
+                        emit(Resource.Error("Server error: ${e.localizedMessage}"))
         } catch (e: IOException) {
             emit(Resource.Error("Network error: Check your internet connection"))
+        } catch (e: Exception) {
+            emit(Resource.Error("Unexpected error: ${e.localizedMessage}"))
         }
     }
 
@@ -77,17 +90,20 @@ class ReminderRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
 
         try {
-            val response = reminderApi.getReminderById(id,reminderType)
-            if (response.isSuccessful) {
-                response.body()?.let { emit(Resource.Success(it.toReminder())) }
-                    ?: emit(Resource.Error("Reminder not found"))
+            val response = reminderApi.getReminderById(id, reminderType)
+            val body = response.body()
+
+            if (response.isSuccessful && body?.data != null) {
+                emit(Resource.Success(body.data.toReminder()))
             } else {
-                emit(Resource.Error("Error fetching reminder: ${response.message()}"))
+                emit(Resource.Error(body?.message ?: "Reminder not found"))
             }
         } catch (e: HttpException) {
             emit(Resource.Error("Server error: ${e.localizedMessage}"))
         } catch (e: IOException) {
             emit(Resource.Error("Network error: Check your internet connection"))
+        } catch (e: Exception) {
+            emit(Resource.Error("Unexpected error: ${e.localizedMessage}"))
         }
     }
 
@@ -96,8 +112,14 @@ class ReminderRepositoryImpl @Inject constructor(
 
         try {
             val response = reminderApi.deleteReminder(id)
+            val body = response.body()
+
             if (response.isSuccessful) {
-                emit(Resource.Success(Unit))
+                if (body?.success == true) {
+                    emit(Resource.Success(Unit))
+                } else {
+                    emit(Resource.Error(body?.message ?: "Failed to delete reminder"))
+                }
             } else if (response.code() == 404) {
                 emit(Resource.Error("Reminder not found"))
             } else {

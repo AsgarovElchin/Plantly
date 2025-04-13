@@ -3,6 +3,7 @@ package asgarov.elchin.plantly.authentication.presentation.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import asgarov.elchin.plantly.authentication.TokenManager
 import asgarov.elchin.plantly.authentication.data.remote.dto.OtpRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.OtpVerifyDto
 import asgarov.elchin.plantly.authentication.domain.repository.AuthRepository
@@ -10,15 +11,19 @@ import asgarov.elchin.plantly.authentication.presentation.screen.login.LoginStat
 import asgarov.elchin.plantly.authentication.presentation.screen.register.RegisterState
 import asgarov.elchin.plantly.core.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _registerState = MutableStateFlow(RegisterState())
@@ -59,31 +64,47 @@ class AuthViewModel @Inject constructor(
         repository.login(email, password).onEach { result ->
             _loginState.value = when (result) {
                 is Resource.Loading -> LoginState(isLoading = true)
-                is Resource.Success -> LoginState(tokens = result.data)
-                is Resource.Error -> LoginState(error = result.message ?: "Unknown error")
+                is Resource.Success -> {
+                    viewModelScope.launch {
+                        tokenManager.saveTokens(
+                            result.data!!.accessToken,
+                            result.data.refreshToken
+                        )
+                        Log.d("LoginDebug", "Access Token: ${result.data?.accessToken}")
+                        Log.d("LoginDebug", "Refresh Token: ${result.data?.refreshToken}")
+
+                        delay(1000)
+                    }
+                    LoginState(tokens = result.data)
+                }
+                is Resource.Error -> LoginState(error = result.message ?: "Login failed")
             }
         }.launchIn(viewModelScope)
     }
 
     fun refreshToken(refreshToken: String) {
+        Log.d("AuthViewModel", "Attempting to refresh token: $refreshToken")
+
         repository.refreshToken(refreshToken).onEach { result ->
-            _refreshState.value = when (result) {
-                is Resource.Loading -> RefreshTokenState(isLoading = true)
-                is Resource.Success -> RefreshTokenState(token = result.data)
-                is Resource.Error -> RefreshTokenState(error = result.message ?: "Unknown error")
+            when (result) {
+                is Resource.Loading -> {
+                    Log.d("AuthViewModel", "Refreshing token...")
+                    _refreshState.value = RefreshTokenState(isLoading = true)
+                }
+
+                is Resource.Success -> {
+                    Log.d("AuthViewModel", "Token refresh success! New access token: ${result.data}")
+                    _refreshState.value = RefreshTokenState(token = result.data)
+                }
+
+                is Resource.Error -> {
+                    Log.e("AuthViewModel", "Token refresh failed: ${result.message}")
+                    _refreshState.value = RefreshTokenState(error = result.message ?: "Unknown error")
+                }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun logout(accessToken: String) {
-        repository.logout(accessToken).onEach { result ->
-            _logoutState.value = when (result) {
-                is Resource.Loading -> LogoutState(isLoading = true)
-                is Resource.Success -> LogoutState(isLoggedOut = true)
-                is Resource.Error -> LogoutState(error = result.message ?: "Unknown error")
-            }
-        }.launchIn(viewModelScope)
-    }
 
     fun sendOtp(email: String, type: String) {
         repository.sendOtp(OtpRequestDto(email, type)).onEach { result ->
@@ -96,21 +117,16 @@ class AuthViewModel @Inject constructor(
     }
 
     fun verifyOtp(email: String, otp: String, type: String) {
-        Log.d("VerifyOtp", "Sending OTP verification request")
-        Log.d("VerifyOtp", "Email: $email, OTP: $otp, Type: $type")
 
         repository.verifyOtp(OtpVerifyDto(email, otp, type)).onEach { result ->
             _otpVerifyState.value = when (result) {
                 is Resource.Loading -> {
-                    Log.d("VerifyOtp", "Loading...")
                     OtpState(isLoading = true)
                 }
                 is Resource.Success -> {
-                    Log.d("VerifyOtp", "OTP verified successfully")
                     OtpState(isSuccess = true)
                 }
                 is Resource.Error -> {
-                    Log.e("VerifyOtp", "OTP verification failed: ${result.message}")
                     OtpState(error = result.message ?: "OTP verification failed")
                 }
             }
@@ -126,4 +142,35 @@ class AuthViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+    fun logout() {
+        Log.d("LogoutDebug", "Logout called")
+
+        viewModelScope.launch {
+            val accessToken = tokenManager.accessToken.first()
+            val refreshToken = tokenManager.refreshToken.first()
+            Log.d("LogoutDebug", "Token: $accessToken")
+            Log.d("LogoutDebug", "Token: $refreshToken")
+
+            repository.logout(accessToken).onEach { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        Log.d("LogoutDebug", "Logging out...")
+                        _logoutState.value = LogoutState(isLoading = true)
+                    }
+                    is Resource.Success -> {
+                        Log.d("LogoutDebug", "Logout success!")
+                        tokenManager.clearTokens()
+                        _logoutState.value = LogoutState(isLoggedOut = true)
+                    }
+                    is Resource.Error -> {
+                        Log.e("LogoutDebug", "Logout failed: ${result.message}")
+                        _logoutState.value = LogoutState(error = result.message ?: "Logout failed")
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+
 }

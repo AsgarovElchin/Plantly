@@ -36,7 +36,6 @@ fun OTPVerificationScreen(
             }
         }
     }
-66
     OTPVerificationContent(
         otp = otp,
         onOtpChange = { otp = it },

@@ -1,10 +1,13 @@
 package asgarov.elchin.plantly.core.di
 
+import asgarov.elchin.plantly.authentication.AuthInterceptor
+import asgarov.elchin.plantly.authentication.TokenAuthenticator
 import asgarov.elchin.plantly.authentication.data.remote.util.MoshiUnitAdapter
 import asgarov.elchin.plantly.core.utils.Constants
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountAdapter
 import asgarov.elchin.plantly.feature_explore.data.remote.dto.PruningCountData
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,11 +26,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator
+    ): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
+
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .addInterceptor(logging)
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
@@ -36,6 +45,7 @@ object AppModule {
             .build()
     }
 
+
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
@@ -43,6 +53,7 @@ object AppModule {
         val pruningCountDataAdapter = baseMoshi.adapter(PruningCountData::class.java)
 
         return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
             .add(Unit::class.java, MoshiUnitAdapter)
             .add(PruningCountAdapter(pruningCountDataAdapter))
             .build()

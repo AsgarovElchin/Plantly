@@ -23,7 +23,7 @@ class EditReminderViewModel @Inject constructor(
     val reminderState: State<ReminderState> = _reminderState
 
     init {
-        val reminderId = savedStateHandle.get<String>("reminderId")?.toLongOrNull()
+        val reminderId = savedStateHandle.get<Long>("reminderId")
         val reminderType = savedStateHandle.get<String>("reminderType")
 
         if (reminderId != null && !reminderType.isNullOrBlank()) {

@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ReminderDto(
     val id: Long? = null,
-    val plantId: Long,
+    val plantId: Long?,
     val plantName: String,
     val reminderType: ReminderTypeDto,
     val repeatEvery: Int,

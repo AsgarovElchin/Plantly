@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 fun ReminderDto.toReminder(): Reminder {
     return Reminder(
         id = id ?: 0L,
-        plantId = plantId,
+        plantId = plantId?: 0,
         plantName = plantName,
         reminderType = reminderType.toReminderType(),
         repeatEvery = repeatEvery,

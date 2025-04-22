@@ -2,6 +2,7 @@ package asgarov.elchin.plantly.authentication.data.remote
 
 import asgarov.elchin.plantly.authentication.data.remote.dto.AccessTokenStringResponse
 import asgarov.elchin.plantly.authentication.data.remote.dto.ApiResponseDto
+import asgarov.elchin.plantly.authentication.data.remote.dto.GoogleLoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginRequestDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.LoginResponseDto
 import asgarov.elchin.plantly.authentication.data.remote.dto.OtpRequestDto
@@ -37,10 +38,6 @@ interface AuthApi {
 
     @POST("api/otp/verify")
     suspend fun verifyOtp(@Body dto: OtpVerifyDto): Response<ApiResponseDto<Unit>>
-
-
-
-
 
 
 }

@@ -21,7 +21,8 @@ class AuthInterceptor @Inject constructor(
             "/register",
             "/refresh",
             "/forgot-password",
-            "/reset-password"
+            "/reset-password",
+            "/auth/google"
         )
 
         val isOtpEndpoint = urlPath.startsWith("/api/otp")

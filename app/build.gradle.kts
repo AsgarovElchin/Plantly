@@ -134,6 +134,18 @@ dependencies {
     // WheelPicker
     implementation (libs.wheelpickercompose)
 
+    // Core Credential Manager
+    implementation(libs.androidx.credentials)
+
+    // Google Play Services integration (required for API 33 and below)
+    implementation(libs.androidx.credentials.play.services.auth)
+
+    // Google ID Token classes (required for GoogleIdTokenCredential, etc.)
+    implementation(libs.googleid)
+
+
+
+
 
 
 

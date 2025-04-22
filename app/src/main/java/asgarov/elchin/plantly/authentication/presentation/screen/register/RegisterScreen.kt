@@ -1,5 +1,6 @@
 package asgarov.elchin.plantly.authentication.presentation.screen.register
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState

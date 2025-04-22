@@ -5,10 +5,13 @@ import asgarov.elchin.plantly.authentication.data.mapper.toTokenPair
 import asgarov.elchin.plantly.authentication.data.mapper.toUser
 import asgarov.elchin.plantly.authentication.data.remote.AuthApi
 import asgarov.elchin.plantly.authentication.data.remote.dto.*
+import asgarov.elchin.plantly.authentication.data.remote.util.parameterizedTypeOf
 import asgarov.elchin.plantly.authentication.domain.model.TokenPair
 import asgarov.elchin.plantly.authentication.domain.model.User
 import asgarov.elchin.plantly.authentication.domain.repository.AuthRepository
 import asgarov.elchin.plantly.core.utils.Resource
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -106,4 +109,6 @@ class AuthRepositoryImpl @Inject constructor(
     }.catch { e ->
         emit(Resource.Error("Error: ${e.localizedMessage}"))
     }
+
+
 }

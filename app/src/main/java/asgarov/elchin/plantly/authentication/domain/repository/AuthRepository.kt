@@ -22,4 +22,6 @@ interface AuthRepository {
     fun sendOtp(dto: OtpRequestDto): Flow<Resource<Unit>>
 
     fun verifyOtp(dto: OtpVerifyDto): Flow<Resource<Unit>>
+
+
 }

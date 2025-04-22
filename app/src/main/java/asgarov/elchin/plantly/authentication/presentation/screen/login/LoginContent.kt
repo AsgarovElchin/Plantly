@@ -102,52 +102,8 @@ fun LoginContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            HorizontalDivider(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(1.dp),
-                color = Color.LightGray
-            )
-            Text(
-                text = "Or Login with",
-                modifier = Modifier.padding(horizontal = 8.dp),
-                color = Color.Gray,
-                fontSize = 14.sp
-            )
-            HorizontalDivider(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(1.dp),
-                color = Color.LightGray
-            )
-        }
 
         Spacer(modifier = Modifier.height(50.dp))
-
-        AuthButton(
-            text = "Sign in with Google",
-            textColor = Color.Black,
-            buttonColor = Color.White,
-            onClick = {},
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.google_icon),
-                    contentDescription = "Google Icon",
-                    tint = Color.Unspecified
-                )
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Box(
             modifier = Modifier
